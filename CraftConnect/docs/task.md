@@ -1,0 +1,113 @@
+# Project Exploration
+
+- [x] [Explore project structure and key files]
+    - [x] List root directory files
+    - [x] Read configuration files (e.g., package.json, README.md)
+    - [x] Understand source code organization (e.g., src folder)
+    - [x] Read IMPROVEMENTS_SUMMARY.md
+    - [x] Verify existence of documented folders (services, models, etc.)
+
+- [ ] [Run and Verify Application]
+    - [x] Start development server (`npm start`)
+    - [ ] Verify homepage loads (User to verify at http://localhost:3000)
+    - [ ] Check console for errors
+
+- [x] [Professional Upgrade Phase 1: Structure & Auth]
+    - [x] **Navbar Refactor**
+        - [x] Remove "Admin" link from public dropdown
+        - [x] Fix layout/spacing consistency
+        - [x] Fix layout/spacing consistency
+        - [x] Ensure "Account" vs "Profile" logic is smooth
+        - [x] **[BUGFIX]** Fix Account Button Visibility (Syntax & Layout)
+    - [x] **Authentication System**
+        - [x] Update `useAuth.js` to use `apiService`
+        - [x] Verify Artisan "Backstory" field persistence
+        - [x] Validate Vendor registration form
+    - [x] **UI/UX Polish**
+        - [x] Update Fonts (typography consistency)
+        - [x] Fix global spacing variables
+        - [x] "Industry Standard" form validation (visual feedback)
+
+- [x] [Professional Upgrade Phase 2: Features & Standards]
+    - [x] **Navbar & Navigation**
+        - [x] Move "Become an Artisan" to Footer/Dropdown
+        - [x] Create standardized Footer component
+    - [x] **Real-time Auth Verification**
+        - [x] Implement OTP Verification UI in UserRegister
+    - [x] **Unified Seller Login**
+        - [x] Update VendorLogin to be "Seller Central" (Artisan + Vendor)
+    - [x] **Unique Feature**
+        - [x] Add "Request Customization" to ProductDetails
+
+- [x] [Professional Upgrade Phase 3: Final Polish]
+    - [x] **Visual Polish**
+        - [x] Replace Navbar Search/Cart with SVGs
+    - [x] **Logic Correction**
+        - [x] Dynamic "Featured Artisan" selection in HomePage
+    - [x] **Unique Feature 2**
+        - [x] "Impact Tracker" visualization in ProductDetails
+
+- [x] [Professional Upgrade Phase 4: Refinement]
+    - [x] **Rebranding**
+        - [x] Rename to "CraftConnect"
+    - [x] **Layout Fixes**
+        - [x] Fix Navbar inconsistency (All pages updated to full width)
+        - [x] Fix Product Grid width issues
+        - [x] Widen Register Page (2-column grid)
+    - [x] **Unique Feature 3**
+        - [x] "View in Room" (AR) - **Live Camera Integration**
+        - [x] Smart Background Blending
+        - [x] Seller Upload Instructions ("Use transparent/white background")
+
+- [x] [Professional Upgrade Phase 5: Seller Ecosystem]
+    - [x] **Dashboards**
+        - [x] Assess Readiness (Confirmed)
+        - [x] Unify to Dynamic "Seller Dashboard" (Artisan/Vendor Support)
+        - [x] **[BUGFIX]** Debug Artisan Login Loading Hang
+        - [x] **[BUGFIX]** Restructure Navbar Dropdown (Guest vs Seller Logic)
+        - [x] **Visual Polish**
+            - [x] Replace Emojis with SVG Icons
+            - [x] Update Fonts to Poppins/Playfair
+            - [x] **Dashboard Navbar** (Hidden Search, Brown Logout Button)
+            - [x] **Footer Standardization** (Replaced inline footers with Component)
+    - [x] **Backend Readiness (Full System)**
+        - [x] Profile Editing (API Integrated)
+        - [x] Stock/Product Management (CRUD API Integrated)
+        - [x] Realtime Simulation (Async Fetching)
+        - [x] **User Features** (Refactored to apiService)
+             - [x] User Profile
+             - [x] User Orders
+             - [x] Checkout
+
+- [x] [Final Project Audit]
+    - [x] Verify industry standards compliance
+    - [x] Confirm backend readiness
+    - [x] Create backend integration guide
+    - [x] Document all API endpoints
+    - [x] Final quality check
+
+- [/] [Refactor to Artisan-Only Model]
+    - [/] API Service Layer
+        - [ ] Rename vendor methods to artisan
+        - [ ] Update endpoint paths
+        - [ ] Update mock data
+    - [ ] Routes & Navigation
+        - [ ] Update AppRoutes.js
+        - [ ] Rename /vendor/* to /artisan/*
+    - [ ] Authentication
+        - [ ] Rename VendorLogin to ArtisanLogin
+        - [ ] Update UserLogin redirects
+        - [ ] Remove VendorRegister
+    - [ ] Navbar Component
+        - [ ] Rename vendorMode to artisanMode
+        - [ ] Update all route references
+    - [ ] Artisan Features
+        - [ ] Rename folder vendors/ to artisans/
+        - [ ] Rename all component files
+        - [ ] Update API calls
+    - [ ] Data Models
+        - [ ] Update Vendor class to Artisan
+    - [ ] Documentation
+        - [ ] Update PROJECT_DOCUMENTATION.md
+        - [ ] Update backend_integration_guide.md
+        - [ ] Update all other docs
