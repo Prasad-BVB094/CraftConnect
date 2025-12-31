@@ -1,0 +1,194 @@
+Folder PATH listing for volume New Volume
+Volume serial number is 8AD1-469F
+D:.
+|   structure.txt
+|   
++---Backend
+|   |   .env
+|   |   .gitignore
+|   |   API calls.txt
+|   |   createAdmin.js
+|   |   details.txt
+|   |   package-lock.json
+|   |   package.json
+|   |   server.js
+|   |   
+|   \---src
+|       |   app.js
+|       |   
+|       +---config
+|       |       cloudinary.js
+|       |       db.js
+|       |       
+|       +---controllers
+|       |       admin.controller.js
+|       |       auth.controller.js
+|       |       cart.controller.js
+|       |       category.controller.js
+|       |       order.controller.js
+|       |       product.controller.js
+|       |       
+|       +---middleware
+|       |       auth.middleware.js
+|       |       role.middleware.js
+|       |       upload.middleware.js
+|       |       
+|       +---models
+|       |       Cart.js
+|       |       Category.js
+|       |       Order.js
+|       |       Product.js
+|       |       User.js
+|       |       
+|       +---routes
+|       |       admin.routes.js
+|       |       auth.routes.js
+|       |       cart.routes.js
+|       |       category.routes.js
+|       |       order.routes.js
+|       |       product.routes.js
+|       |       
+|       \---utils
+|               email.js
+|               otp.js
+|               
+\---CraftConnect
+    |   .gitignore
+    |   IMPROVEMENTS_SUMMARY.md
+    |   package-lock.json
+    |   package.json
+    |   
+    +---build
+    |   |   asset-manifest.json
+    |   |   index.html
+    |   |   
+    |   +---images
+    |   |   +---artisans
+    |   |   +---banners
+    |   |   +---categories
+    |   |   \---products
+    |   \---static
+    |       +---css
+    |       |       main.e884c14d.css
+    |       |       main.e884c14d.css.map
+    |       |       
+    |       \---js
+    |               main.32d001e8.js
+    |               main.32d001e8.js.LICENSE.txt
+    |               main.32d001e8.js.map
+    |               
+    +---docs
+    |       backend_integration_guide.md
+    |       COMPLETE_PROJECT_GUIDE.md
+    |       DETAILED_FUNCTIONALITY_GUIDE.md
+    |       final_project_audit.md
+    |       FLOWCHART_DESCRIPTION.md
+    |       GETTING_STARTED.md
+    |       implementation_plan.md
+    |       PROJECT_DOCUMENTATION.md
+    |       README.md
+    |       STORAGE_STRATEGY.md
+    |       task.md
+    |       walkthrough.md
+    |       
+    +---public
+    |   |   index.html
+    |   |   
+    |   \---images
+    |       +---artisans
+    |       +---banners
+    |       +---categories
+    |       \---products
+    \---src
+        |   index.js
+        |   
+        +---app
+        |   +---pages
+        |   |       HomePage.js
+        |   |       
+        |   \---routes
+        |           AppRoutes.js
+        |           
+        +---features
+        |   +---admin
+        |   |       AdminDashboard.js
+        |   |       AdminDashboardPage.js
+        |   |       CategoryManagerPage.js
+        |   |       ManageArtisansPage.js
+        |   |       ManageOrdersPage.js
+        |   |       ManageProducts.js
+        |   |       ManageUsers.js
+        |   |       ManageUsersPage.js
+        |   |       ManageVendors.js
+        |   |       
+        |   +---artisans
+        |   |       AddProduct.js
+        |   |       AddProductPage.js
+        |   |       ArtisanDashboardPage.js
+        |   |       ArtisanOrdersPage.js
+        |   |       ArtisanProfileEditorPage.js
+        |   |       ManageProductsPage.js
+        |   |       MyProducts.js
+        |   |       OrdersReceived.js
+        |   |       VendorDashboard.js
+        |   |       
+        |   +---auth
+        |   |       AdminLogin.js
+        |   |       ArtisanLogin.js
+        |   |       ArtisanRegister.js
+        |   |       UserLogin.js
+        |   |       UserRegister.js
+        |   |       
+        |   +---cart
+        |   |       CartPage.js
+        |   |       
+        |   +---categories
+        |   |       CategoriesPage.js
+        |   |       CategoryIcon.js
+        |   |       CategoryPage.js
+        |   |       
+        |   +---checkout
+        |   |       CheckoutPage.js
+        |   |       
+        |   +---orders
+        |   |       OrdersPage.js
+        |   |       
+        |   +---products
+        |   |       data.js
+        |   |       ProductCard.js
+        |   |       ProductDetailsPage.js
+        |   |       ProductGrid.js
+        |   |       ProductListPage.js
+        |   |       
+        |   +---search
+        |   |       SearchPage.js
+        |   |       
+        |   \---users
+        |           ArtisanProfilePage.js
+        |           UserProfilePage.js
+        |           
+        \---shared
+            +---components
+            |       FloatingBackground.js
+            |       Footer.js
+            |       Navbar.js
+            |       
+            +---context
+            |       CartContext.js
+            |       
+            +---hooks
+            |       useAuth.js
+            |       
+            +---models
+            |       index.js
+            |       
+            +---services
+            |       api.js
+            |       
+            +---styles
+            |       auth.css
+            |       globals.css
+            |       
+            \---utils
+                    helpers.js
+                    
