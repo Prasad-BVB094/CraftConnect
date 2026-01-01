@@ -266,10 +266,11 @@ async adminUpdateProduct(id, data) {
 
 
 async deleteAdminProduct(id) {
-  return this.request(`/products/${id}`, {
+  return this.request(`/admin/products/${id}`, {
     method: "DELETE",
   });
 }
+
 // ==========================
 // ADMIN — CATEGORY ACTIONS
 // ==========================

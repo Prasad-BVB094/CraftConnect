@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../shared/components/Navbar";
 import apiService from "../../shared/services/api";
 import { useAuth } from "../../shared/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+const navigate = useNavigate();
 
 
 // Professional SVG icons for admin dashboard
@@ -59,7 +61,6 @@ const AdminIcons = {
 function AdminDashboardPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
   const [statsData, setStatsData] = useState({
     users: 0,
     artisans: 0,
@@ -68,19 +69,13 @@ function AdminDashboardPage() {
     revenue: 0
   });
 
+const { user, loading: authLoading } = useAuth();
+
 useEffect(() => {
-  const token = localStorage.getItem("token");
-  const userData = localStorage.getItem("user");
+  if (authLoading) return; // wait for hydration
 
-  if (!token || !userData) {
-    window.location.href = "/login/admin";
-    return;
-  }
-
-  const parsedUser = JSON.parse(userData);
-
-  if (parsedUser.role !== "admin") {
-    window.location.href = "/login/admin";
+  if (!user || user.role !== "admin") {
+    navigate("/login/admin", { replace: true });
     return;
   }
 
@@ -94,7 +89,7 @@ useEffect(() => {
         artisans: response.totalArtisans || 0,
         products: response.totalProducts || 0,
         orders: response.totalOrders || 0,
-        revenue: 0
+        revenue: 0,
       });
     } catch (err) {
       console.error("Failed to load admin dashboard:", err);
@@ -104,7 +99,8 @@ useEffect(() => {
   };
 
   fetchDashboard();
-}, []);
+}, [user, authLoading]);
+
 
 
 

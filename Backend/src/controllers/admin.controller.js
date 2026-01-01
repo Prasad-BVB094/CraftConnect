@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
-
+const Review = require("../models/Review");
 /*
 ====================================
 EXISTING LOGIC — DO NOT TOUCH
@@ -198,3 +198,4 @@ exports.adminUpdateProduct = async (req, res) => {
     res.status(500).json({ message: "Admin product update failed" });
   }
 };
+

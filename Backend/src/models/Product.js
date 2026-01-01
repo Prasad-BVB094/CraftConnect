@@ -20,9 +20,6 @@ const productSchema = new mongoose.Schema(
       min: 0,
     },
 
-    /* =========================
-       PHASE 2.B ADDITION
-    ========================= */
     stock: {
       type: Number,
       required: true,
@@ -33,10 +30,8 @@ const productSchema = new mongoose.Schema(
     sku: {
       type: String,
       unique: true,
-      index: true
+      index: true,
     },
-
-    /* ========================= */
 
     images: [
       {
@@ -61,11 +56,22 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
+    /* ⭐ REVIEW AGGREGATES */
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+
+    reviewCount: {
+      type: Number,
+      default: 0,
+    },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
+
+/* AUTO SKU */
 productSchema.pre("save", function (next) {
   if (!this.sku) {
     const categoryCode =

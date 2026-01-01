@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const auth = require("../middleware/auth.middleware");
+const { requireRole } = require("../middleware/role.middleware");
 const {
   getPendingArtisans,
   approveArtisan,
@@ -11,49 +12,34 @@ const {
   getAllArtisans,
   getAllProducts,
   getAllOrders,
+  adminUpdateProduct,
   deleteProductByAdmin,
-  adminUpdateProduct
+  deleteReviewByAdmin,
 } = require("../controllers/admin.controller");
 
-
-
-/*
-====================================
-GLOBAL ADMIN PROTECTION
-====================================
-*/
+/* GLOBAL ADMIN PROTECTION */
 router.use(auth);
-router.use((req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Admin access only" });
-  }
-  next();
-});
+router.use(requireRole("admin"));
 
-/*
-====================================
-EXISTING ROUTES — DO NOT TOUCH
-====================================
-*/
+/* ARTISANS */
 router.get("/artisans/pending", getPendingArtisans);
 router.post("/artisans/:id/approve", approveArtisan);
 router.post("/artisans/:id/reject", rejectArtisan);
 
-/*
-====================================
-NEW READ-ONLY ADMIN ROUTES
-====================================
-*/
-
-// Dashboard summary
+/* DASHBOARD */
 router.get("/dashboard", getDashboardSummary);
 
-// Lists
+/* LISTS */
 router.get("/users", getAllUsers);
 router.get("/artisans", getAllArtisans);
 router.get("/products", getAllProducts);
+router.get("/orders", getAllOrders);
+
+/* PRODUCT CONTROL */
 router.put("/products/:id", adminUpdateProduct);
 router.delete("/products/:id", deleteProductByAdmin);
-router.get("/orders", getAllOrders);
+
+/* REVIEW CONTROL */
+router.delete("/reviews/:id", deleteReviewByAdmin);
 
 module.exports = router;

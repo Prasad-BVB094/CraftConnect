@@ -34,11 +34,21 @@ exports.getCategoryBySlug = async (req, res) => {
    ADMIN: CREATE CATEGORY
 ========================= */
 exports.createCategory = async (req, res) => {
-  const { name, slug, icon } = req.body;
+  const { name, description, icon } = req.body;
 
-  const category = await Category.create({ name, slug, icon });
+  if (!name || !description) {
+    return res.status(400).json({ message: "Name and description are required" });
+  }
+
+  const category = await Category.create({
+    name,
+    description,
+    icon
+  });
+
   res.status(201).json(category);
 };
+
 
 /* =========================
    ADMIN: UPDATE CATEGORY

@@ -15,8 +15,13 @@ export const useAuth = () => {
         const token = localStorage.getItem('token');
         
         if (storedUser && token) {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
+          try {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+          } catch {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+          }
         } else {
            // Invalid state
            localStorage.removeItem('user');

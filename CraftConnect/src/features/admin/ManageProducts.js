@@ -43,10 +43,11 @@ const handleEdit = async (id) => {
 
   try {
     const updated = await apiService.adminUpdateProduct(id, {
-  title: newName,
-  price: Number(newPrice),
-  stock: Number(newStock),
+  title,
+  price: Number(price),
+  stock: Number(stock),
 });
+
     setProducts(products.map(p => p._id === id ? updated : p));
   } catch {
     alert("Update failed");
