@@ -49,9 +49,6 @@ exports.placeOrder = async (req, res) => {
         });
       }
 
-      product.stock -= item.quantity;
-      await product.save();
-
       totalAmount += item.quantity * product.price;
 
       orderItems.push({
@@ -76,12 +73,16 @@ exports.placeOrder = async (req, res) => {
       giftMessage,
       totalAmount,
       status: "pending",
+      isPaid: false,
     });
 
     cart.items = [];
     await cart.save();
 
-    res.status(201).json({ message: "Order placed successfully", order });
+    res.status(201).json({
+      message: "Order placed successfully. Proceed to payment.",
+      order,
+    });
   } catch (err) {
     res.status(500).json({
       message: "Order placement failed",
@@ -145,7 +146,6 @@ exports.updateOrderStatus = async (req, res) => {
     return res.status(404).json({ message: "Order not found" });
   }
 
-  // Artisan: can update only their orders
   if (
     req.user.role === "artisan" &&
     !order.items.some(
