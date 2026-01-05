@@ -3,7 +3,6 @@ import Navbar from "../../shared/components/Navbar";
 import apiService from "../../shared/services/api";
 import { useAuth } from "../../shared/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-const navigate = useNavigate();
 
 
 // Professional SVG icons for admin dashboard
@@ -59,6 +58,7 @@ const AdminIcons = {
 };
 
 function AdminDashboardPage() {
+  const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [statsData, setStatsData] = useState({

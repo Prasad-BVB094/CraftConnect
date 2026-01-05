@@ -41,8 +41,8 @@ function VendorDashboardPage() {
               
               const totalOrders = orders?.length || 0;
               const revenue = orders?.reduce((sum, order) => sum + (order.totalAmount || 0), 0) || 0;
-              const pendingOrders = orders?.filter(o => o.status === 'Pending').length || 0;
-              const completedOrders = orders?.filter(o => o.status === 'Delivered' || o.status === 'Shipped').length || 0;
+              const pendingOrders = orders?.filter(o => o.status.toLowerCase() === 'pending').length || 0;
+              const completedOrders = orders?.filter(o => ['delivered', 'shipped'].includes(o.status.toLowerCase())).length || 0;
 
               setDashboardStats({
                   totalProducts,
@@ -268,6 +268,125 @@ function VendorDashboardPage() {
           )
         )
       )
+    ),
+
+    /* Notifications / New Orders Alert */
+    React.createElement(
+      "div",
+      {
+        style: {
+          background: "linear-gradient(135deg, rgba(230,144,0,0.1), rgba(230,144,0,0.05))",
+          padding: "20px",
+          borderRadius: "18px",
+          border: "1px solid rgba(230,144,0,0.2)",
+          marginBottom: "30px",
+        },
+      },
+      React.createElement(
+        "div",
+        {
+          style: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "16px"
+          }
+        },
+        React.createElement(
+          "div",
+          { style: { display: "flex", alignItems: "center", gap: "12px" } },
+          /* Bell Icon with Badge */
+          React.createElement("div", {
+            style: {
+              position: "relative",
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #E09000, #D98E04)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }
+          },
+            React.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#fff", strokeWidth: "2" },
+              React.createElement("path", { d: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" }),
+              React.createElement("path", { d: "M13.73 21a2 2 0 0 1-3.46 0" })
+            ),
+            dashboardStats.pendingOrders > 0 && React.createElement("div", {
+              style: {
+                position: "absolute",
+                top: "-2px",
+                right: "-2px",
+                width: "18px",
+                height: "18px",
+                borderRadius: "50%",
+                background: "#e74c3c",
+                color: "#fff",
+                fontSize: "10px",
+                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }
+            }, dashboardStats.pendingOrders)
+          ),
+          React.createElement("h3", {
+            style: {
+              fontFamily: "'Playfair Display', serif",
+              color: "#D98E04",
+              margin: 0
+            }
+          }, "New Order Notifications")
+        ),
+        React.createElement("a", {
+          href: "/artisan/orders",
+          style: {
+            color: "#D98E04",
+            fontSize: "14px",
+            fontWeight: "600",
+            textDecoration: "none"
+          }
+        }, "View All →")
+      ),
+      /* Notification Items */
+      recentOrderList.filter(o => o.status.toLowerCase() === 'pending').length === 0 ?
+        React.createElement("p", { style: { color: "#888", fontStyle: "italic", margin: 0 } }, "No new pending orders")
+        :
+        recentOrderList.filter(o => o.status.toLowerCase() === 'pending').slice(0, 3).map((order, idx) =>
+          React.createElement("div", {
+            key: idx,
+            style: {
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "12px 16px",
+              background: "#fff",
+              borderRadius: "10px",
+              marginBottom: idx < 2 ? "8px" : 0,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
+            }
+          },
+            React.createElement("div", null,
+              React.createElement("div", { style: { fontWeight: "600", fontSize: "14px" } }, 
+                `New order from ${order.user?.name || 'Customer'}`
+              ),
+              React.createElement("div", { style: { fontSize: "12px", color: "var(--muted)" } }, 
+                `₹${order.totalAmount} • ${order.items?.length || 0} item(s)`
+              )
+            ),
+            React.createElement("span", {
+              style: {
+                padding: "4px 10px",
+                borderRadius: "12px",
+                background: "#FFF3E0",
+                color: "#E65100",
+                fontSize: "11px",
+                fontWeight: "600",
+                textTransform: "uppercase"
+              }
+            }, order.status)
+          )
+        )
     ),
 
     /* Recent Orders Card */

@@ -112,97 +112,164 @@ function CategoryPage() {
   const currentHeaderBg = headerImages[name?.toLowerCase()] || headerImages.default;
 
   return (
-    <div style={{ background: "#FDFBF7", minHeight: "100vh" }}>
-      <Navbar />
-      
-      {/* MAGNIFICENT TEXTURED HEADER - COMPACT */}
-      <div style={{ 
-          position: "relative",
-          padding: "40px 20px 80px", // Reduced padding
-          // Blend the image with the gradient for texture + readability
-          background: `linear-gradient(135deg, rgba(141, 110, 99, 0.95), rgba(78, 52, 46, 0.92)), url(${currentHeaderBg})`,
+    <div style={{ position: "relative", minHeight: "100vh", background: "#121212" }}>
+      {/* Fixed Background Layer */}
+      <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: "url('/wallpaper.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          borderBottom: "1px solid rgba(166,138,100,0.1)",
-          overflow: "hidden",
-          textAlign: "center"
-      }}>
-          {/* Floating Particles */}
-          <div style={{ opacity: 0.3 }}>
-            <FloatingBackground />
-          </div>
+          backgroundAttachment: "fixed",
+          zIndex: 0
+      }}></div>
+      
+      {/* Black Tint Overlay */}
+      <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "rgba(0,0,0,0.7)",
+          zIndex: 1
+      }}></div>
+
+      <div style={{ position: "relative", zIndex: 10 }}>
+        {/* Header/Navbar Wrapper with background */}
+        <div style={{ background: "#FDFBF7" }}>
+          <Navbar />
+        </div>
+        
+        {/* STORYBOOK STYLE HEADER */}
+        <div style={{ 
+            position: "relative",
+            padding: "60px 20px 100px",
+            overflow: "hidden",
+            textAlign: "center",
+            background: "#2C2016", // Solid dark background for banner
+            borderBottom: "1px solid rgba(166,138,100,0.3)"
+        }}>
+            {/* Background Image with Overlay (Specific Category Image) */}
+            <div style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundImage: `url(${currentHeaderBg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundAttachment: "fixed",
+                opacity: 0.6, // Increased opacity to hide wallpaper completely
+                zIndex: 0
+            }}></div>
+            
+            {/* Vignette Shadow Effect */}
+            <div style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                background: "radial-gradient(circle, transparent 40%, rgba(0,0,0,0.7) 100%)",
+                pointerEvents: "none",
+                zIndex: 1
+            }}></div>
+            
+            {/* Floating Particles */}
+            <div style={{ opacity: 0.3, position: "relative", zIndex: 1 }}>
+              <FloatingBackground />
+            </div>
 
           {/* Breadcrumbs */}
-          <div style={{ position: "relative", zIndex: 4, marginBottom: "20px", fontSize: "12px", color: "rgba(255,255,255,0.7)", fontWeight: "500", letterSpacing: "1px" }}>
-            <span style={{ cursor: "pointer" }} onClick={() => window.location.href="/"}>HOME</span>
-            <span style={{ margin: "0 10px" }}>/</span>
-            <span style={{ color: "#fff" }}>{name?.toUpperCase()}</span>
+          <div style={{ position: "relative", zIndex: 4, marginBottom: "24px", fontSize: "12px", color: "rgba(232,222,209,0.8)", fontWeight: "500", letterSpacing: "2px" }}>
+            <span style={{ cursor: "pointer", transition: "color 0.2s" }} onClick={() => window.location.href="/"}>HOME</span>
+            <span style={{ margin: "0 12px", opacity: 0.4 }}>›</span>
+            <span style={{ color: "#E8DED1" }}>{name?.toUpperCase()}</span>
           </div>
 
           <div className="container" style={{ position: "relative", zIndex: 2, maxWidth: "800px", margin: "0 auto" }}>
              
-             {/* Glass Icon Box */}
+             {/* Glass Icon Box with Glow */}
              <div style={{ 
                  display: "inline-block", 
-                 padding: "12px", 
-                 background: "rgba(255,255,255,0.15)", 
+                 padding: "16px", 
+                 background: "linear-gradient(135deg, rgba(166,138,100,0.4), rgba(166,138,100,0.2))", 
                  backdropFilter: "blur(10px)",
                  borderRadius: "50%", 
-                 marginBottom: "15px", 
-                 boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-                 border: "1px solid rgba(255,255,255,0.2)"
+                 marginBottom: "20px", 
+                 boxShadow: "0 15px 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.1)",
+                 border: "1px solid rgba(232,222,209,0.3)"
              }}>
                 <span style={{ filter: "brightness(0) invert(1)" }}>
-                    <CategoryIcon category={category?.name || ""} size={36} />
+                    <CategoryIcon category={category?.name || ""} size={40} />
                 </span>
              </div>
              
              <h1 style={{ 
                  fontFamily: "'Playfair Display', serif", 
-                 fontSize: "42px", 
-                 color: "#FFFFFF",
-                 marginBottom: "10px",
+                 fontSize: "52px", 
+                 color: "#E8DED1",
+                 marginBottom: "16px",
                  fontWeight: "700",
                  letterSpacing: "-0.5px",
-                 textShadow: "0 4px 15px rgba(0,0,0,0.2)"
+                 textShadow: "2px 4px 20px rgba(0,0,0,0.6)"
              }}>
                  {category?.name}
              </h1>
              
-             <div style={{ width: "50px", height: "3px", background: "#D7CCC8", margin: "0 auto 15px", borderRadius: "2px", opacity: 0.8 }}></div>
+             {/* Decorative Line */}
+             <div style={{ 
+                 width: "80px", 
+                 height: "3px", 
+                 background: "linear-gradient(90deg, transparent, rgba(166,138,100,1), transparent)", 
+                 margin: "0 auto 20px", 
+                 borderRadius: "2px"
+             }}></div>
  
              <p style={{ 
-                 color: "rgba(255,255,255,0.95)",
-                 fontSize: "16px", 
-                 lineHeight: "1.6",
+                 color: "rgba(232,222,209,0.95)",
+                 fontSize: "17px", 
+                 lineHeight: "1.7",
                  fontFamily: "'Neue Montreal', sans-serif",
-                 maxWidth: "640px",
-                 margin: "0 auto 20px",
-                 fontWeight: "300"
+                 maxWidth: "600px",
+                 margin: "0 auto 28px",
+                 fontWeight: "400",
+                 fontStyle: "italic",
+                 textShadow: "1px 1px 4px rgba(0,0,0,0.4)"
              }}>
                  {category?.description}
              </p>
 
-             {/* BADGES ROW: Adds Content Density */}
+             {/* BADGES ROW */}
              <div style={{ display: "flex", justifyContent: "center", gap: "12px", flexWrap: "wrap" }}>
                 {["Authentic", "Handcrafted", "Direct from Artisan"].map(tag => (
                     <span key={tag} style={{ 
-                        background: "rgba(255,255,255,0.1)", 
-                        border: "1px solid rgba(255,255,255,0.2)",
-                        padding: "6px 16px", 
-                        borderRadius: "20px", 
-                        color: "#fff", 
+                        background: "rgba(166,138,100,0.25)", 
+                        border: "1px solid rgba(232,222,209,0.3)",
+                        padding: "8px 20px", 
+                        borderRadius: "24px", 
+                        color: "#E8DED1", 
                         fontSize: "13px",
-                        fontWeight: "500",
-                        backdropFilter: "blur(4px)"
+                        fontWeight: "600",
+                        backdropFilter: "blur(4px)",
+                        boxShadow: "0 4px 15px rgba(0,0,0,0.3)"
                     }}>
-                        ✓ {tag}
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" style={{ marginRight: "6px", verticalAlign: "middle" }}>
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        {tag}
                     </span>
                 ))}
              </div>
           </div>
       </div>
 
+      {/* Content Area */}
       <div className="container" style={{ maxWidth: "1200px", margin: "-40px auto 60px", padding: "0 20px", position: "relative", zIndex: 3 }}>
         
         {/* TOOLBAR */}
@@ -210,14 +277,14 @@ function CategoryPage() {
             background: "#fff",
             borderRadius: "16px", 
             padding: "16px 30px",
-            boxShadow: "0 15px 40px rgba(62,39,35,0.08)",
+            boxShadow: "0 15px 40px rgba(62,39,35,0.12)",
             display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "20px",
-            border: "1px solid rgba(0,0,0,0.05)",
+            border: "1px solid rgba(0,0,0,0.1)",
             marginBottom: "40px",
             color: "#4E342E" 
         }}>
             {/* Left: Result Count */}
-             <span style={{ color: "#8D6E63", fontWeight: "600", fontSize: "15px" }}>
+             <span style={{ color: "#5D4037", fontWeight: "700", fontSize: "15px" }}>
                 Found {processedProducts.length} unique items
             </span>
 
@@ -300,8 +367,12 @@ function CategoryPage() {
         </main>
       </div>
       
-      <Footer />
+      {/* Footer Area with solid background */}
+      <div style={{ background: "#FDFBF7", paddingBottom: "20px", borderTop: "1px solid rgba(166,138,100,0.1)" }}>
+        <Footer />
+      </div>
     </div>
+  </div>
   );
 }
 

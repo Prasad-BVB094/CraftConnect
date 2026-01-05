@@ -19,7 +19,7 @@ exports.createPaymentOrder = async (req, res) => {
 
     const order = await Order.findOne({
       _id: orderId,
-      user: req.user._id,
+      user: req.user.userId,
     });
 
     if (!order) {
@@ -51,7 +51,7 @@ exports.createPaymentOrder = async (req, res) => {
       orderId: order._id,
       razorpayOrderId: razorpayOrder.id,
       amount: order.totalAmount,
-      user: req.user._id,
+      user: req.user.userId,
     });
 
     res.json({
@@ -100,8 +100,11 @@ exports.verifyPayment = async (req, res) => {
     await payment.save();
 
     await Order.findByIdAndUpdate(payment.orderId, {
-      paymentStatus: "PAID",
-      orderStatus: "CONFIRMED",
+      isPaid: true,
+      status: "confirmed",
+      paidAt: new Date(),
+      razorpayOrderId: razorpayOrderId,
+      razorpayPaymentId: razorpayPaymentId
     });
 
     res.json({ message: "Payment verified successfully" });

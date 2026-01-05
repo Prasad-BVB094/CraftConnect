@@ -70,12 +70,12 @@ function AddProductPage() {
       setLoading(true);
       try {
           // ENSURE NUMERIC VALUES
-          const payload = new FormData();
-            payload.append("title", formData.title);
-            payload.append("description", formData.description);
-            payload.append("price", Number(formData.price));
-            payload.append("stock", Number(formData.stock));
-            payload.append(
+          const formPayload = new FormData();
+            formPayload.append("title", formData.title);
+            formPayload.append("description", formData.description);
+            formPayload.append("price", Number(formData.price));
+            formPayload.append("stock", Number(formData.stock));
+            formPayload.append(
               "category",
               typeof formData.category === "object"
                 ? formData.category._id
@@ -86,7 +86,7 @@ function AddProductPage() {
             const imageInput = document.querySelector('input[type="file"]');
             if (imageInput?.files?.length) {
               Array.from(imageInput.files).forEach(file => {
-                payload.append("images", file);
+                formPayload.append("images", file);
               });
             }
 
@@ -96,7 +96,10 @@ function AddProductPage() {
               await apiService.updateProduct(id, formPayload);
               alert("Product updated successfully!");
           } else {
-               formPayload.append("artisanId", user.id);
+               // The backend uses token userId, but if legacy code expects artisanId, we provide it
+               const artisanId = user?.id || user?._id || user?.userId;
+               if (artisanId) formPayload.append("artisanId", artisanId);
+               
                await apiService.addProduct(formPayload);
                alert("Product added successfully!");
           }

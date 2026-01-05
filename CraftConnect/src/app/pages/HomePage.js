@@ -4,6 +4,7 @@ import ProductGrid from "../../features/products/ProductGrid";
 import CategoryIcon from "../../features/categories/CategoryIcon";
 import Footer from "../../shared/components/Footer";
 import apiService from "../../shared/services/api";
+import CustomerSupportWidget from "../../shared/components/CustomerSupportWidget";
 
 function HomePage() {
   const [products, setProducts] = useState([]);
@@ -99,12 +100,151 @@ function HomePage() {
       ? artisanProducts[Math.floor(Math.random() * artisanProducts.length)]
       : null;
 
+  // Carousel state
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const carouselImages = [
+    { src: "/carousel1.png", title: "Discover Authentic Crafts", subtitle: "Handmade by skilled artisans across India" },
+    { src: "/carousel2.png", title: "Elegant Home Decor", subtitle: "Traditional beauty for modern spaces" },
+    { src: "/carousel3.png", title: "Celebrate Heritage", subtitle: "Every piece tells a story" }
+  ];
+
+  // Auto-rotate carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % carouselImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [carouselImages.length]);
+
   return React.createElement(
     "div",
     { style: { width: "100%" } },
 
     /* -------- NAVBAR -------- */
     React.createElement(Navbar),
+
+    /* -------- HERO CAROUSEL -------- */
+    React.createElement(
+      "section",
+      {
+        style: {
+          position: "relative",
+          width: "100%",
+          height: "400px",
+          overflow: "hidden",
+          marginBottom: "20px"
+        }
+      },
+      /* Carousel Images */
+      carouselImages.map((slide, index) =>
+        React.createElement(
+          "div",
+          {
+            key: index,
+            style: {
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              opacity: currentSlide === index ? 1 : 0,
+              transition: "opacity 0.8s ease-in-out",
+              backgroundImage: `url(${slide.src})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center"
+            }
+          },
+          /* Overlay */
+          React.createElement("div", {
+            style: {
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: "linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2))"
+            }
+          }),
+          /* Text Content */
+          React.createElement(
+            "div",
+            {
+              style: {
+                position: "absolute",
+                top: "50%",
+                left: "60px",
+                transform: "translateY(-50%)",
+                color: "#fff",
+                maxWidth: "500px",
+                opacity: currentSlide === index ? 1 : 0,
+                transition: "opacity 0.8s ease-in-out 0.3s"
+              }
+            },
+            React.createElement("h1", {
+              style: {
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "42px",
+                marginBottom: "12px",
+                textShadow: "2px 2px 8px rgba(0,0,0,0.3)"
+              }
+            }, slide.title),
+            React.createElement("p", {
+              style: {
+                fontSize: "18px",
+                opacity: 0.9,
+                marginBottom: "24px"
+              }
+            }, slide.subtitle),
+            React.createElement(
+              "a",
+              {
+                href: "/catalog",
+                style: {
+                  display: "inline-block",
+                  padding: "12px 28px",
+                  background: "var(--accent)",
+                  color: "#fff",
+                  borderRadius: "30px",
+                  textDecoration: "none",
+                  fontWeight: "600",
+                  transition: "all 0.3s ease"
+                }
+              },
+              "Shop Now"
+            )
+          )
+        )
+      ),
+      /* Carousel Dots */
+      React.createElement(
+        "div",
+        {
+          style: {
+            position: "absolute",
+            bottom: "20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            gap: "10px"
+          }
+        },
+        carouselImages.map((_, index) =>
+          React.createElement("button", {
+            key: index,
+            onClick: () => setCurrentSlide(index),
+            style: {
+              width: currentSlide === index ? "24px" : "10px",
+              height: "10px",
+              borderRadius: "5px",
+              border: "none",
+              background: currentSlide === index ? "#fff" : "rgba(255,255,255,0.5)",
+              cursor: "pointer",
+              transition: "all 0.3s ease"
+            }
+          })
+        )
+      )
+    ),
 
     /* -------- HERO -------- */
     React.createElement(
@@ -784,6 +924,191 @@ function HomePage() {
       )
     ),
 
+    /* -------- HOW IT WORKS - STORYBOOK STYLE -------- */
+    React.createElement(
+      "section",
+      {
+        style: {
+          padding: "100px 20px",
+          background: "linear-gradient(180deg, #2C2016, #3E2C1C)",
+          position: "relative",
+          overflow: "hidden"
+        }
+      },
+      /* Vignette Shadow Effect */
+      React.createElement("div", {
+        style: {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          boxShadow: "inset 0 0 150px 60px rgba(0,0,0,0.8)",
+          pointerEvents: "none",
+          zIndex: 1
+        }
+      }),
+      /* Subtle Pattern Overlay */
+      React.createElement("div", {
+        style: {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(166,138,100,0.03) 35px, rgba(166,138,100,0.03) 70px)",
+          opacity: 0.5,
+          pointerEvents: "none"
+        }
+      }),
+      React.createElement(
+        "div",
+        { style: { maxWidth: "1100px", margin: "0 auto", position: "relative", zIndex: 2 } },
+        /* Title */
+        React.createElement(
+          "div",
+          { style: { textAlign: "center", marginBottom: "70px" } },
+          React.createElement("h3", {
+            style: {
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "42px",
+              color: "#E8DED1",
+              marginBottom: "16px",
+              textShadow: "2px 2px 8px rgba(0,0,0,0.5)"
+            }
+          }, "Your Journey Begins Here"),
+          React.createElement("p", {
+            style: {
+              maxWidth: "500px",
+              margin: "0 auto",
+              color: "rgba(232,222,209,0.7)",
+              fontSize: "16px",
+              fontStyle: "italic"
+            }
+          }, "From artisan hands to your home — a story of craft & connection")
+        ),
+        /* Storybook Cards Container */
+        React.createElement(
+          "div",
+          {
+            style: {
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "24px"
+            }
+          },
+          [
+            { 
+              step: "I", 
+              title: "Discover", 
+              desc: "Explore authentic handcrafted treasures from verified artisans across India",
+              icon: React.createElement("svg", { width: "36", height: "36", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5" },
+                React.createElement("circle", { cx: "11", cy: "11", r: "8" }),
+                React.createElement("path", { d: "M21 21l-4.35-4.35" })
+              )
+            },
+            { 
+              step: "II", 
+              title: "Connect", 
+              desc: "Learn the story behind each creation and the heritage it represents",
+              icon: React.createElement("svg", { width: "36", height: "36", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5" },
+                React.createElement("path", { d: "M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" })
+              )
+            },
+            { 
+              step: "III", 
+              title: "Customize", 
+              desc: "Request personalized modifications tailored to your preferences",
+              icon: React.createElement("svg", { width: "36", height: "36", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5" },
+                React.createElement("path", { d: "M12 20h9" }),
+                React.createElement("path", { d: "M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" })
+              )
+            },
+            { 
+              step: "IV", 
+              title: "Receive", 
+              desc: "Welcome handcrafted treasures to your doorstep with care",
+              icon: React.createElement("svg", { width: "36", height: "36", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5" },
+                React.createElement("path", { d: "M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" }),
+                React.createElement("polyline", { points: "3.27 6.96 12 12.01 20.73 6.96" }),
+                React.createElement("line", { x1: "12", y1: "22.08", x2: "12", y2: "12" })
+              )
+            }
+          ].map((item, i) =>
+            React.createElement(
+              "div",
+              {
+                key: i,
+                style: {
+                  background: "linear-gradient(180deg, rgba(248,244,239,0.95), rgba(232,222,209,0.9))",
+                  borderRadius: "16px",
+                  padding: "32px 24px",
+                  textAlign: "center",
+                  boxShadow: "0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(166,138,100,0.3)",
+                  position: "relative",
+                  transition: "transform 0.4s ease, box-shadow 0.4s ease"
+                },
+                onMouseEnter: (e) => {
+                  e.currentTarget.style.transform = "translateY(-10px)";
+                  e.currentTarget.style.boxShadow = "0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(166,138,100,0.5)";
+                },
+                onMouseLeave: (e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(166,138,100,0.3)";
+                }
+              },
+              /* Roman Numeral */
+              React.createElement("div", {
+                style: {
+                  position: "absolute",
+                  top: "-12px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  background: "var(--accent)",
+                  color: "#fff",
+                  padding: "6px 16px",
+                  borderRadius: "20px",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  letterSpacing: "2px"
+                }
+              }, `STEP ${item.step}`),
+              /* Icon */
+              React.createElement("div", {
+                style: {
+                  width: "70px",
+                  height: "70px",
+                  margin: "16px auto 20px",
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg, var(--accent), #8B6F47)",
+                  display: "grid",
+                  placeItems: "center",
+                  color: "#fff"
+                }
+              }, item.icon),
+              /* Title */
+              React.createElement("h4", {
+                style: {
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: "22px",
+                  color: "var(--accent)",
+                  marginBottom: "12px"
+                }
+              }, item.title),
+              /* Description */
+              React.createElement("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "#5C4A3A",
+                  lineHeight: "1.6"
+                }
+              }, item.desc)
+            )
+          )
+        )
+      )
+    ),
+
        React.createElement(
         "section",
         {
@@ -922,6 +1247,147 @@ function HomePage() {
         )
     ),
 
+    /* -------- CRAFTSMANSHIP GALLERY -------- */
+    React.createElement(
+      "section",
+      {
+        style: {
+          padding: "100px 20px",
+          backgroundImage: "url('/wallpaper.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+          position: "relative"
+        }
+      },
+      /* Dark Vignette Overlay */
+      React.createElement("div", {
+        style: {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "linear-gradient(180deg, rgba(44,32,22,0.7), rgba(44,32,22,0.85))",
+          boxShadow: "inset 0 0 150px 50px rgba(0,0,0,0.5)",
+          pointerEvents: "none"
+        }
+      }),
+      React.createElement(
+        "div",
+        { style: { maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 } },
+        /* Title */
+        React.createElement(
+          "div",
+          { style: { textAlign: "center", marginBottom: "50px" } },
+          React.createElement("h3", {
+            style: {
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "42px",
+              color: "#E8DED1",
+              marginBottom: "16px",
+              textShadow: "2px 2px 8px rgba(0,0,0,0.5)"
+            }
+          }, "Craftsmanship Gallery"),
+          React.createElement("p", {
+            style: {
+              maxWidth: "500px",
+              margin: "0 auto",
+              color: "rgba(232,222,209,0.8)",
+              fontSize: "16px",
+              fontStyle: "italic"
+            }
+          }, "A glimpse into India's rich heritage of traditional craftsmanship")
+        ),
+        /* Gallery Grid */
+        React.createElement(
+          "div",
+          {
+            style: {
+              padding: "20px",
+              background: "rgba(248,244,239,0.08)",
+              backdropFilter: "blur(10px)",
+              borderRadius: "24px",
+              border: "1px solid rgba(232,222,209,0.2)",
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateRows: "repeat(2, 200px)",
+              gap: "16px"
+            }
+          },
+          [
+            { span: "span 2", img: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&q=80", label: "Traditional Terracotta Art" },
+            { span: "span 1", img: "/g1.jpg", label: "Heritage Craft I" },
+            { span: "span 1", img: "/g2.jpeg", label: "Heritage Craft II" },
+            { span: "span 1", img: "/g3.jpeg", label: "Heritage Craft III" },
+            { span: "span 1", img: "/g4.jpeg", label: "Heritage Craft IV" },
+            { span: "span 2", img: "/g5.jpeg", label: "Heritage Craft V" }
+          ].map((item, i) =>
+            React.createElement(
+              "div",
+              {
+                key: i,
+                style: {
+                  gridColumn: item.span,
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  position: "relative",
+                  cursor: "pointer",
+                  transition: "transform 0.4s ease"
+                },
+                onMouseEnter: (e) => {
+                  e.currentTarget.style.transform = "scale(1.02)";
+                  e.currentTarget.querySelector('.gallery-overlay').style.opacity = "1";
+                },
+                onMouseLeave: (e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.querySelector('.gallery-overlay').style.opacity = "0";
+                }
+              },
+              /* Image */
+              React.createElement("img", {
+                src: item.img,
+                alt: item.label,
+                style: {
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover"
+                }
+              }),
+              /* Hover Overlay */
+              React.createElement(
+                "div",
+                {
+                  className: "gallery-overlay",
+                  style: {
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    background: "linear-gradient(to top, rgba(62,44,32,0.8), transparent)",
+                    display: "flex",
+                    alignItems: "flex-end",
+                    padding: "20px",
+                    opacity: 0,
+                    transition: "opacity 0.3s ease"
+                  }
+                },
+                React.createElement("span", {
+                  style: {
+                    color: "#fff",
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: "18px",
+                    fontWeight: "600"
+                  }
+                }, item.label)
+              )
+            )
+          )
+        )
+      )
+    ),
+
     /* -------- TESTIMONIALS -------- */
     React.createElement(
         "section",
@@ -1009,6 +1475,9 @@ function HomePage() {
         )
     ),
 
+    /* -------- CUSTOMER SUPPORT WIDGET -------- */
+    React.createElement(CustomerSupportWidget),
+
     /* -------- FOOTER -------- */
     React.createElement(Footer)
   );
@@ -1093,7 +1562,6 @@ function FloatingBackground() {
                     width: `${p.size}px`,
                     height: `${p.size}px`,
                     color: p.color, 
-                    animation: `floatUp ${p.duration}s ease-in-out infinite alternate`, 
                     animationName: "floatUp", 
                     animationDuration: `${p.duration}s`,
                     animationTimingFunction: "linear",

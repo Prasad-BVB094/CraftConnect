@@ -11,6 +11,7 @@ function Navbar(props) {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [searchQuery, setSearchQuery] = useState("");
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
   const [artisanMode, setArtisanMode] = useState(false);
 
   useEffect(() => {
@@ -70,8 +71,7 @@ function Navbar(props) {
     { 
       style: {
         width: "100%",
-        background: "rgba(255, 255, 255, 0.95)",
-        backdropFilter: "blur(12px)",
+        background: "#fff",
         borderBottom: "1px solid rgba(166,138,100,0.1)",
         position: "sticky",
         top: 0,
@@ -249,6 +249,151 @@ function Navbar(props) {
         },
         "Explore"
       ),
+
+
+
+      // Customer Support Button
+      React.createElement(
+        "button",
+        {
+          key: "support-btn",
+          className: "nav-btn",
+          style: { ...navBtnStyle(showSupportModal), display: "flex", alignItems: "center", gap: "6px" },
+          onClick: () => setShowSupportModal(true)
+        },
+        React.createElement(
+          "svg",
+          {
+            xmlns: "http://www.w3.org/2000/svg",
+            width: "20",
+            height: "20",
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            strokeWidth: "2",
+            strokeLinecap: "round",
+            strokeLinejoin: "round"
+          },
+          React.createElement("path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" }),
+          React.createElement("circle", { cx: "12", cy: "11", r: "3" }),
+          React.createElement("path", { d: "M9 17v-2a3 3 0 0 1 6 0v2" })
+        ),
+        "Support"
+      ),
+
+
+      // Support Modal
+      showSupportModal && React.createElement(
+        "div",
+        {
+          style: {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.5)", // Darker semi-transparent background
+            backdropFilter: "blur(6px)",
+            display: "flex",
+            alignItems: "flex-start", // Start from top
+            justifyContent: "center",
+            paddingTop: "60px", // Pushed down from top
+            paddingBottom: "40px",
+            zIndex: 9999, // Ensure it's above EVERYTHING
+            overflowY: "auto",
+            animation: "fadeIn 0.3s ease"
+          },
+          onClick: () => setShowSupportModal(false)
+        },
+        React.createElement(
+          "div",
+          {
+            style: {
+              width: "450px",
+              maxWidth: "95vw",
+              background: "#fff",
+              borderRadius: "24px",
+              padding: "40px 30px",
+              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+              border: "1px solid rgba(166,138,100,0.2)",
+              textAlign: "center",
+              position: "relative",
+              animation: "slideUp 0.4s ease-out"
+            },
+            onClick: (e) => e.stopPropagation()
+          },
+          /* Close Button */
+          React.createElement("button", {
+            onClick: () => setShowSupportModal(false),
+            style: {
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              background: "rgba(166,138,100,0.1)",
+              border: "none",
+              borderRadius: "50%",
+              width: "32px",
+              height: "32px",
+              cursor: "pointer",
+              color: "var(--accent)"
+            }
+          }, "✕"),
+
+          /* Header */
+          React.createElement("div", {
+            style: {
+              width: "70px",
+              height: "70px",
+              background: "linear-gradient(135deg, var(--accent), #8B6F47)",
+              borderRadius: "50%",
+              margin: "0 auto 24px",
+              display: "grid",
+              placeItems: "center",
+              boxShadow: "0 10px 20px rgba(166,138,100,0.2)"
+            }
+          }, React.createElement("svg", { width: "32", height: "32", viewBox: "0 0 24 24", fill: "none", stroke: "#fff", strokeWidth: "2" }, 
+              React.createElement("path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" }),
+              React.createElement("path", { d: "M12 7v5" }),
+              React.createElement("path", { d: "M12 16h.01" })
+          )),
+
+          React.createElement("h3", { style: { fontFamily: "'Playfair Display', serif", fontSize: "28px", color: "var(--accent)", margin: "0 0 12px" } }, "Customer Support"),
+          React.createElement("p", { style: { color: "var(--muted)", fontSize: "15px", lineHeight: "1.6", marginBottom: "30px" } }, 
+            "At CraftConnect, we're dedicated to preserving heritage and ensuring your experience is as authentic as our products."
+          ),
+
+          /* Contact Info Card */
+          React.createElement("div", {
+            style: {
+              background: "rgba(166,138,100,0.05)",
+              borderRadius: "16px",
+              padding: "20px",
+              border: "1px dashed rgba(166,138,100,0.3)",
+              marginBottom: "24px"
+            }
+          },
+            React.createElement("p", { style: { fontSize: "14px", color: "var(--accent)", fontWeight: "600", marginBottom: "4px" } }, "Email us directly at:"),
+            React.createElement("a", { 
+              href: "mailto:craftconnect136@gmail.com",
+              style: { fontSize: "18px", color: "#5D4037", fontWeight: "700", textDecoration: "none", borderBottom: "1px solid #5D4037" }
+            }, "craftconnect136@gmail.com"),
+            React.createElement("p", { style: { fontSize: "12px", color: "var(--muted)", marginTop: "12px" } }, "Response time: Typically within 24 hours")
+          ),
+
+          React.createElement("p", { style: { fontSize: "13px", color: "var(--muted)", fontStyle: "italic" } }, 
+            "Our team of heritage specialists is ready to help with orders, product inquiries, or artisan stories."
+          )
+        )
+      ),
+
+      /* Global Animations for Support Modal */
+      React.createElement("style", null, `
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { 
+          from { transform: translateY(30px); opacity: 0; } 
+          to { transform: translateY(0); opacity: 1; } 
+        }
+      `),
 
 
 

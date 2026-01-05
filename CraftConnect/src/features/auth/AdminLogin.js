@@ -6,6 +6,7 @@ function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,13 +34,14 @@ function AdminLogin() {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       
-      // Alert and Redirect
-      alert("Admin Login successful!");
-      window.location.href = "/admin/dashboard";
+      // Animation and Redirect
+      setShowSuccess(true);
+      setTimeout(() => {
+        window.location.href = "/admin/dashboard";
+      }, 1500);
 
     } catch (err) {
       console.error("Admin Login Failed:", err);
-      // Fallback for dev/demo if backend is empty (Optional, but removed for strict realtime request)
       alert(err.message || "Invalid credentials. Please try again.");
       setLoading(false);
     }
@@ -49,6 +51,61 @@ function AdminLogin() {
     "div",
     null,
     React.createElement(Navbar),
+
+    /* Success Overlay */
+    showSuccess && React.createElement(
+      "div",
+      {
+        style: {
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(255, 255, 255, 0.95)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999,
+          animation: "fadeIn 0.4s ease"
+        }
+      },
+      React.createElement(
+        "div",
+        {
+          style: {
+            width: "80px",
+            height: "80px",
+            borderRadius: "50%",
+            background: "#2C3E50", // Admin theme color
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 10px 30px rgba(44, 62, 80, 0.3)",
+            marginBottom: "20px",
+            animation: "pulseCheck 0.5s ease"
+          }
+        },
+        React.createElement("svg", { width: "40", height: "40", viewBox: "0 0 24 24", fill: "none", stroke: "#fff", strokeWidth: "3" },
+          React.createElement("polyline", { points: "20 6 9 17 4 12" })
+        )
+      ),
+      React.createElement("h2", { style: { fontFamily: "'Playfair Display', serif", color: "#2C3E50", margin: "0 0 8px" } }, "Admin Authentication Successful"),
+      React.createElement("p", { style: { color: "var(--muted)", fontStyle: "italic" } }, "Loading secure workspace...")
+    ),
+
+    /* CSS for Animation */
+    React.createElement("style", null, `
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes pulseCheck { 
+        0% { transform: scale(0.5); opacity: 0; }
+        70% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+      }
+    `),
+
+
     React.createElement(
       "div",
       { className: "container" },
@@ -106,5 +163,6 @@ function AdminLogin() {
     )
   );
 }
+
 
 export default AdminLogin;

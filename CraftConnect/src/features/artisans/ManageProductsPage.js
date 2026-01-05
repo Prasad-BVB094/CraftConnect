@@ -17,8 +17,8 @@ function VendorManageProductsPage() {
 
   const fetchProducts = async () => {
     try {
-      // In real app, we'd pass user.id to get specific products
-      const data = await apiService.getArtisanProducts(user?.id);
+      // The API service uses the token for identification, no need to pass user ID
+      const data = await apiService.getArtisanProducts();
       setProducts(data);
     } catch (err) {
       console.error("Failed to fetch products", err);

@@ -1,60 +1,77 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../../shared/components/Navbar";
 import ProductGrid from "../../features/products/ProductGrid";
-import { useCart } from "../../shared/context/CartContext";
+import Footer from "../../shared/components/Footer";
+import apiService from "../../shared/services/api";
 
-function ArtisanProfilePage(props) {
+function ArtisanProfilePage() {
   const { id } = useParams();
-  const { addToCart } = useCart();
+  const [artisan, setArtisan] = useState(null);
+  const [artisanProducts, setArtisanProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Later: fetch from backend using /artisan/:id
-  const artisan = {
-    id: parseInt(id) || 1,
-    name: "Asha",
-    role: "Potter",
-    village: "Kera Village",
-    years: 12,
-    avatar: "A",
-    story:
-      "I work with locally sourced red clay, using traditional firing methods passed down through generations. My designs are inspired by river forms and the textures of our land. Growing up in Kera Village, I learned pottery from my grandmother, who herself learned from her mother. Each piece I create carries not just my skill, but the legacy of generations of women potters who found freedom and expression through their craft. The clay from the river near our village has unique properties that make it perfect for creating durable, beautiful pieces. I fire my pottery in a traditional wood-fired kiln that my family has maintained for over 60 years.",
-    achievements: [
-      "Featured in National Handicraft Exhibition 2022",
-      "Winner of Best Potter Award, State Crafts Fair 2021",
-      "Trained over 50 young artisans in traditional pottery"
-    ],
-    totalProducts: 24,
-    totalOrders: 156,
-  };
+  useEffect(() => {
+    const fetchArtisanData = async () => {
+      setLoading(true);
+      try {
+        // Fetch all products and filter by artisan ID
+        const allProductsData = await apiService.getProducts();
+        const allProducts = Array.isArray(allProductsData) ? allProductsData : (allProductsData.products || []);
+        
+        // Filter products by this artisan
+        const artisanProds = allProducts.filter(p => {
+          const artisanId = p.artisan?._id || p.artisan;
+          return artisanId === id;
+        });
 
-  const artisanProducts = [
-    {
-      id: 1,
-      name: "Terracotta Planter",
-      artisan: "Asha",
-      price: 1200,
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      id: 2,
-      name: "Clay Tea Cups",
-      artisan: "Asha",
-      price: 350,
-      image: "https://via.placeholder.com/300x200",
-    },
-    {
-      id: 3,
-      name: "Mini Terracotta Vases",
-      artisan: "Asha",
-      price: 180,
-      image: "https://via.placeholder.com/300x200",
+        if (artisanProds.length > 0) {
+          // Extract artisan info from the first product
+          const firstProduct = artisanProds[0];
+          const artisanData = firstProduct.artisan;
+          
+          setArtisan({
+            id: artisanData?._id || id,
+            name: artisanData?.name || "Artisan",
+            email: artisanData?.email || "",
+            role: artisanData?.craftType || "Artisan",
+            village: artisanData?.village || artisanData?.address || "India",
+            years: artisanData?.experience || 5,
+            avatar: (artisanData?.name || "A").charAt(0).toUpperCase(),
+            story: artisanData?.bio || artisanData?.story || "A skilled artisan creating beautiful handcrafted products with traditional techniques passed down through generations.",
+            achievements: artisanData?.achievements || [],
+            totalProducts: artisanProds.length,
+            totalOrders: artisanData?.totalOrders || 0,
+          });
+
+          // Map products for display
+          setArtisanProducts(artisanProds.map(p => ({
+            ...p,
+            id: p._id || p.id,
+            name: p.name || p.title,
+            image: p.images?.[0] || p.image,
+            artisan: artisanData?.name || "Artisan",
+            category: p.category?.name || p.category || "Handmade"
+          })));
+        } else {
+          setError("No products found for this artisan.");
+        }
+      } catch (err) {
+        console.error("Failed to fetch artisan data:", err);
+        setError("Failed to load artisan profile.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchArtisanData();
     }
-  ];
+  }, [id]);
 
-  const handleAddToCart = (product) => {
-    addToCart(product, 1);
-    alert(`${product.name} added to cart!`);
-  };
+  if (loading) return React.createElement("div", { style: { padding: "40px", textAlign: "center" } }, "Loading artisan profile...");
+  if (error || !artisan) return React.createElement("div", { style: { padding: "40px", textAlign: "center", color: "red" } }, error || "Artisan not found");
 
   return React.createElement(
     React.Fragment,
@@ -62,7 +79,7 @@ function ArtisanProfilePage(props) {
     React.createElement(Navbar),
     React.createElement(
       "div",
-      { className: "container" },
+      { className: "container", style: { maxWidth: "1200px", margin: "0 auto", padding: "0 20px" } },
 
     /* -------- ARTISAN HEADER -------- */
     React.createElement(
@@ -70,13 +87,13 @@ function ArtisanProfilePage(props) {
       {
         style: {
           display: "flex",
-          gap: "20px",
+          gap: "24px",
           marginTop: "30px",
-          padding: "24px",
-          borderRadius: "16px",
-          background: "linear-gradient(180deg, #fff, rgba(248,244,239,0.9))",
-          border: "1px solid rgba(62,44,32,0.08)",
-          boxShadow: "0 6px 20px rgba(62,44,32,0.05)",
+          padding: "30px",
+          borderRadius: "20px",
+          background: "linear-gradient(180deg, #fff, rgba(248,244,239,0.95))",
+          border: "1px solid rgba(166,138,100,0.15)",
+          boxShadow: "0 8px 30px rgba(62,44,32,0.08)",
         },
       },
 
@@ -85,16 +102,17 @@ function ArtisanProfilePage(props) {
         "div",
         {
           style: {
-            width: "90px",
-            height: "90px",
-            borderRadius: "14px",
-            background: "linear-gradient(135deg,var(--secondary),var(--accent))",
+            width: "100px",
+            height: "100px",
+            borderRadius: "16px",
+            background: "linear-gradient(135deg, var(--secondary), var(--accent))",
             display: "grid",
             placeItems: "center",
             color: "#fff",
             fontFamily: "'Playfair Display', serif",
-            fontSize: "26px",
+            fontSize: "32px",
             fontWeight: 700,
+            flexShrink: 0,
           },
         },
         artisan.avatar
@@ -103,25 +121,49 @@ function ArtisanProfilePage(props) {
       /* Info */
       React.createElement(
         "div",
-        null,
+        { style: { flex: 1 } },
 
         React.createElement(
           "h2",
           {
             style: {
               fontFamily: "'Playfair Display', serif",
-              fontSize: "28px",
+              fontSize: "32px",
               color: "var(--accent)",
-              marginBottom: "6px",
+              marginBottom: "8px",
             },
           },
-          `${artisan.name} — ${artisan.role}`
+          artisan.name
         ),
 
         React.createElement(
           "div",
-          { style: { color: "var(--muted)", marginBottom: "10px" } },
-          `${artisan.village} • ${artisan.years} yrs`
+          { 
+            style: { 
+              color: "var(--muted)", 
+              marginBottom: "16px",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              flexWrap: "wrap"
+            } 
+          },
+          React.createElement("span", { 
+            style: { 
+              background: "rgba(166,138,100,0.15)", 
+              padding: "4px 12px", 
+              borderRadius: "20px",
+              fontSize: "14px"
+            } 
+          }, `📍 ${artisan.village}`),
+          React.createElement("span", { 
+            style: { 
+              background: "rgba(166,138,100,0.15)", 
+              padding: "4px 12px", 
+              borderRadius: "20px",
+              fontSize: "14px"
+            } 
+          }, `🎨 ${artisan.role}`)
         ),
 
         React.createElement(
@@ -130,7 +172,7 @@ function ArtisanProfilePage(props) {
             style: {
               color: "var(--text)",
               fontSize: "15px",
-              lineHeight: "1.6",
+              lineHeight: "1.7",
               maxWidth: "700px",
             },
           },
@@ -143,27 +185,29 @@ function ArtisanProfilePage(props) {
           {
             style: {
               display: "flex",
-              gap: "20px",
-              marginTop: "16px",
+              gap: "16px",
+              marginTop: "20px",
+              flexWrap: "wrap"
             },
           },
           React.createElement(
             "div",
             {
               style: {
-                padding: "10px 16px",
-                background: "rgba(166,138,100,0.12)",
-                borderRadius: "10px",
+                padding: "12px 20px",
+                background: "rgba(166,138,100,0.1)",
+                borderRadius: "12px",
+                textAlign: "center",
               },
             },
             React.createElement(
               "div",
-              { style: { fontSize: "20px", fontWeight: "bold", color: "var(--secondary)" } },
+              { style: { fontSize: "24px", fontWeight: "bold", color: "var(--accent)" } },
               artisan.totalProducts
             ),
             React.createElement(
               "div",
-              { style: { fontSize: "12px", color: "var(--muted)" } },
+              { style: { fontSize: "12px", color: "var(--muted)", marginTop: "4px" } },
               "Products"
             )
           ),
@@ -171,86 +215,43 @@ function ArtisanProfilePage(props) {
             "div",
             {
               style: {
-                padding: "10px 16px",
-                background: "rgba(166,138,100,0.12)",
-                borderRadius: "10px",
+                padding: "12px 20px",
+                background: "rgba(166,138,100,0.1)",
+                borderRadius: "12px",
+                textAlign: "center",
               },
             },
             React.createElement(
               "div",
-              { style: { fontSize: "20px", fontWeight: "bold", color: "var(--secondary)" } },
-              artisan.totalOrders
-            ),
-            React.createElement(
-              "div",
-              { style: { fontSize: "12px", color: "var(--muted)" } },
-              "Orders Completed"
-            )
-          ),
-          React.createElement(
-            "div",
-            {
-              style: {
-                padding: "10px 16px",
-                background: "rgba(166,138,100,0.12)",
-                borderRadius: "10px",
-              },
-            },
-            React.createElement(
-              "div",
-              { style: { fontSize: "20px", fontWeight: "bold", color: "var(--secondary)" } },
+              { style: { fontSize: "24px", fontWeight: "bold", color: "var(--accent)" } },
               artisan.years
             ),
             React.createElement(
               "div",
-              { style: { fontSize: "12px", color: "var(--muted)" } },
-              "Years Experience"
+              { style: { fontSize: "12px", color: "var(--muted)", marginTop: "4px" } },
+              "Years Exp."
             )
-          )
-        )
-      )
-    ),
-
-    /* -------- ACHIEVEMENTS SECTION -------- */
-    React.createElement(
-      "section",
-      {
-        style: {
-          marginTop: "30px",
-          padding: "24px",
-          borderRadius: "16px",
-          background: "linear-gradient(180deg, #fff, rgba(248,244,239,0.9))",
-          border: "1px solid rgba(62,44,32,0.08)",
-          boxShadow: "0 6px 20px rgba(62,44,32,0.05)",
-        },
-      },
-      React.createElement(
-        "h3",
-        {
-          style: {
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "22px",
-            color: "var(--accent)",
-            marginBottom: "14px",
-          },
-        },
-        "Achievements & Recognition"
-      ),
-      React.createElement(
-        "ul",
-        { style: { paddingLeft: "20px", color: "var(--text)" } },
-        artisan.achievements.map((achievement, i) =>
+          ),
+          /* Verified Badge */
           React.createElement(
-            "li",
+            "div",
             {
-              key: i,
               style: {
-                marginBottom: "8px",
-                lineHeight: "1.6",
-                fontSize: "15px",
+                padding: "12px 20px",
+                background: "linear-gradient(135deg, rgba(76,175,80,0.15), rgba(76,175,80,0.05))",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                border: "1px solid rgba(76,175,80,0.2)"
               },
             },
-            achievement
+            React.createElement("span", { style: { fontSize: "18px" } }, "✓"),
+            React.createElement(
+              "div",
+              { style: { fontSize: "14px", color: "#4CAF50", fontWeight: "600" } },
+              "Verified Artisan"
+            )
           )
         )
       )
@@ -263,33 +264,48 @@ function ArtisanProfilePage(props) {
 
       React.createElement(
         "div",
-        { className: "section-title" },
+        { 
+          style: { 
+            display: "flex", 
+            justifyContent: "space-between", 
+            alignItems: "center",
+            marginBottom: "24px"
+          } 
+        },
         React.createElement(
           "h3",
-          null,
+          { 
+            style: { 
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "24px",
+              color: "var(--accent)"
+            } 
+          },
           `Products by ${artisan.name}`
         ),
-        React.createElement("a", { href: "#" }, "View all")
+        React.createElement(
+          "span",
+          { style: { color: "var(--muted)", fontSize: "14px" } },
+          `${artisanProducts.length} items`
+        )
       ),
 
-      React.createElement(ProductGrid, { products: artisanProducts })
+      /* Product Grid with proper wrapper */
+      React.createElement(
+        "div",
+        {
+          style: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+            gap: "24px"
+          }
+        },
+        React.createElement(ProductGrid, { products: artisanProducts })
+      )
     ),
 
     /* -------- FOOTER -------- */
-    React.createElement(
-      "footer",
-      { style: { marginTop: "50px" } },
-      React.createElement(
-        "div",
-        null,
-        "© CraftConnect — handcrafted community"
-      ),
-      React.createElement(
-        "div",
-        null,
-        "Made with ❤️ | Beige & brown theme"
-      )
-    )
+    React.createElement(Footer)
     )
   );
 }

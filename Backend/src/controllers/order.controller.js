@@ -15,7 +15,18 @@ exports.placeOrder = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
-    const { shippingAddress } = req.body;
+    const { 
+      shippingAddress, 
+      customerPhone,
+      customerAltPhone,
+      deliveryType,
+      deliveryInstructions,
+      paymentMethod,
+      customizationRequest,
+      isGift,
+      giftMessage
+    } = req.body;
+    
     if (!shippingAddress) {
       return res.status(400).json({ message: "Shipping address required" });
     }
@@ -26,8 +37,16 @@ exports.placeOrder = async (req, res) => {
     for (const item of cart.items) {
       const product = item.product;
 
-      if (!product || !product.isActive || product.stock < item.quantity) {
-        return res.status(400).json({ message: "Product not available" });
+      if (!product || !product.isActive) {
+        return res.status(400).json({ 
+          message: `Product "${product?.title || 'Unknown'}" is no longer available.` 
+        });
+      }
+
+      if (product.stock < item.quantity) {
+        return res.status(400).json({ 
+          message: `Insufficient stock for "${product.title}". Available: ${product.stock}, Requested: ${item.quantity}` 
+        });
       }
 
       product.stock -= item.quantity;
@@ -47,6 +66,14 @@ exports.placeOrder = async (req, res) => {
       user: req.user.userId,
       items: orderItems,
       shippingAddress,
+      customerPhone,
+      customerAltPhone,
+      deliveryType: deliveryType || "standard",
+      deliveryInstructions,
+      paymentMethod: paymentMethod || "cod",
+      customizationRequest,
+      isGift: isGift || false,
+      giftMessage,
       totalAmount,
       status: "pending",
     });

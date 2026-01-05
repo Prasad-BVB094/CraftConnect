@@ -199,3 +199,22 @@ exports.adminUpdateProduct = async (req, res) => {
   }
 };
 
+/*
+====================================
+ADMIN: DELETE REVIEW (HARD DELETE)
+====================================
+*/
+exports.deleteReviewByAdmin = async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    await review.deleteOne();
+    res.json({ message: "Review deleted permanently" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete review" });
+  }
+};

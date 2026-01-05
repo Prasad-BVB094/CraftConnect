@@ -10,9 +10,18 @@ export function useCart() {
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  // Check auth status directly from localStorage for Context initialization
-  const token = localStorage.getItem("token");
+  // Poll for token changes (detects login/logout in same tab)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentToken = localStorage.getItem("token");
+      if (currentToken !== token) {
+        setToken(currentToken);
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [token]);
 
   // Load cart on mount or when token changes
   useEffect(() => {

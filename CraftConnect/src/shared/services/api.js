@@ -316,6 +316,50 @@ async getAdminOrders() {
           body: JSON.stringify(data)
       });
   }
+
+  // ==========================================
+  // REVIEWS
+  // ==========================================
+
+  async getReviews(productId) {
+    return this.request(`/reviews/${productId}`);
+  }
+
+  async addReview(productId, rating, comment) {
+    return this.request('/reviews', {
+      method: 'POST',
+      body: JSON.stringify({ product: productId, rating, comment })
+    });
+  }
+
+  // ==========================================
+  // RAZORPAY PAYMENT
+  // ==========================================
+
+  async createPaymentOrder(orderId) {
+    return this.request('/payments/create', {
+      method: 'POST',
+      body: JSON.stringify({ orderId })
+    });
+  }
+
+  async verifyPayment(razorpayOrderId, razorpayPaymentId, razorpaySignature) {
+    return this.request('/payments/verify', {
+      method: 'POST',
+      body: JSON.stringify({ razorpayOrderId, razorpayPaymentId, razorpaySignature })
+    });
+  }
+
+  // ==========================================
+  // CUSTOMER SUPPORT
+  // ==========================================
+
+  async submitSupportRequest(data) {
+    // For now, this could be stored locally or sent to backend
+    // Backend endpoint can be added: POST /api/support
+    console.log('Support request submitted:', data);
+    return { success: true, message: 'Support request received' };
+  }
 }
 
 
