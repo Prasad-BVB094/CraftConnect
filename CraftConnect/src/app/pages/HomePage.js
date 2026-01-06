@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "../../shared/components/Navbar";
 import ProductGrid from "../../features/products/ProductGrid";
 import CategoryIcon from "../../features/categories/CategoryIcon";
@@ -6,19 +8,19 @@ import Footer from "../../shared/components/Footer";
 import apiService from "../../shared/services/api";
 import CustomerSupportWidget from "../../shared/components/CustomerSupportWidget";
 
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
 function HomePage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
 
-  // Fetch products and artisans on mount
+  // Fetch products on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productsData, artisansData] = await Promise.all([
-            apiService.getProducts().catch(() => []), 
-            apiService.getArtisans().catch(() => []) 
-        ]);
+        const productsData = await apiService.getProducts().catch(() => []);
 
         /* --- PROCESS PRODUCTS --- */
         let productList = Array.isArray(productsData) ? productsData : (productsData.products || []);
@@ -115,6 +117,104 @@ function HomePage() {
     }, 5000);
     return () => clearInterval(timer);
   }, [carouselImages.length]);
+
+  // GSAP Animation Refs
+  const introBannerRef = useRef(null);
+  const introTitleRef = useRef(null);
+  const introSubtitleRef = useRef(null);
+  const introLine1Ref = useRef(null);
+  const introLine2Ref = useRef(null);
+
+  // GSAP ScrollTrigger Animations
+  useEffect(() => {
+    // Small delay to ensure refs are populated after render
+    const timer = setTimeout(() => {
+      if (!introBannerRef.current) return;
+
+      // Intro banner text reveal animation
+      if (introTitleRef.current) {
+        gsap.fromTo(
+          introTitleRef.current,
+          { opacity: 0, y: 80, scale: 0.9 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: introBannerRef.current,
+              start: "top 85%",
+              end: "bottom 20%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+
+      if (introSubtitleRef.current) {
+        gsap.fromTo(
+          introSubtitleRef.current,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.3,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: introBannerRef.current,
+              start: "top 85%",
+              end: "bottom 20%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+
+      // Decorative lines animation
+      if (introLine1Ref.current) {
+        gsap.fromTo(
+          introLine1Ref.current,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: introBannerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+
+      if (introLine2Ref.current) {
+        gsap.fromTo(
+          introLine2Ref.current,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            duration: 0.8,
+            delay: 0.2,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: introBannerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
 
   return React.createElement(
     "div",
@@ -244,6 +344,138 @@ function HomePage() {
           })
         )
       )
+    ),
+
+    /* -------- GSAP INTRO TEXT BANNER -------- */
+    React.createElement(
+      "section",
+      {
+        ref: introBannerRef,
+        style: {
+          padding: "80px 20px",
+          background: "linear-gradient(180deg, #FDFBF7 0%, #F8F4EF 100%)",
+          textAlign: "center",
+          position: "relative",
+          overflow: "hidden"
+        }
+      },
+      /* Decorative Background Pattern */
+      React.createElement("div", {
+        style: {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A68A64' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          opacity: 0.5
+        }
+      }),
+
+      /* Top Decorative Line */
+      React.createElement("div", {
+        ref: introLine1Ref,
+        style: {
+          width: "120px",
+          height: "3px",
+          background: "linear-gradient(90deg, transparent, #A68A64, transparent)",
+          margin: "0 auto 40px",
+          transformOrigin: "center"
+        }
+      }),
+
+      /* Main Title */
+      React.createElement(
+        "h2",
+        {
+          ref: introTitleRef,
+          style: {
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(32px, 5vw, 56px)",
+            color: "#3E2723",
+            marginBottom: "24px",
+            lineHeight: 1.2,
+            letterSpacing: "-0.02em",
+            maxWidth: "900px",
+            margin: "0 auto 24px"
+          }
+        },
+        "Where Tradition Meets",
+        React.createElement("br"),
+        React.createElement("span", {
+          style: {
+            background: "linear-gradient(135deg, #A68A64, #8B6F47)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text"
+          }
+        }, "Modern Artistry")
+      ),
+
+      /* Subtitle */
+      React.createElement(
+        "p",
+        {
+          ref: introSubtitleRef,
+          style: {
+            fontSize: "18px",
+            color: "#5D4037",
+            maxWidth: "700px",
+            margin: "0 auto 40px",
+            lineHeight: 1.7,
+            opacity: 0.9
+          }
+        },
+        "Discover handcrafted treasures from India's finest artisans. Each piece carries centuries of heritage, ",
+        React.createElement("strong", null, "lovingly crafted"),
+        " for the modern home."
+      ),
+
+      /* Bottom Decorative Line */
+      React.createElement("div", {
+        ref: introLine2Ref,
+        style: {
+          width: "80px",
+          height: "3px",
+          background: "linear-gradient(90deg, transparent, #A68A64, transparent)",
+          margin: "0 auto",
+          transformOrigin: "center"
+        }
+      }),
+
+      /* Floating Decorative Elements */
+      React.createElement("div", {
+        style: {
+          position: "absolute",
+          top: "20%",
+          left: "10%",
+          width: "60px",
+          height: "60px",
+          borderRadius: "50%",
+          background: "linear-gradient(135deg, rgba(166,138,100,0.1), rgba(166,138,100,0.05))",
+          animation: "float 6s ease-in-out infinite"
+        }
+      }),
+      React.createElement("div", {
+        style: {
+          position: "absolute",
+          bottom: "20%",
+          right: "15%",
+          width: "40px",
+          height: "40px",
+          borderRadius: "50%",
+          background: "linear-gradient(135deg, rgba(166,138,100,0.08), rgba(166,138,100,0.03))",
+          animation: "float 8s ease-in-out infinite reverse"
+        }
+      }),
+
+      /* CSS Keyframes */
+      React.createElement("style", null, `
+        @keyframes float {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
+        }
+      `)
     ),
 
     /* -------- HERO -------- */

@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
 const Review = require("../models/Review");
+const { sendArtisanApprovalEmail } = require("../utils/email");
 /*
 ====================================
 EXISTING LOGIC — DO NOT TOUCH
@@ -34,11 +35,20 @@ exports.approveArtisan = async (req, res) => {
     artisan.isApproved = true;
     await artisan.save();
 
+    // Send approval email notification
+    try {
+      await sendArtisanApprovalEmail(artisan.email, artisan.name);
+    } catch (emailErr) {
+      console.error("Email notification failed:", emailErr.message);
+      // Continue even if email fails
+    }
+
     res.json({ message: "Artisan approved successfully" });
   } catch (err) {
     res.status(500).json({ message: "Failed to approve artisan" });
   }
 };
+
 
 // Reject artisan
 exports.rejectArtisan = async (req, res) => {
@@ -74,12 +84,20 @@ exports.getDashboardSummary = async (req, res) => {
     const totalProducts = await Product.countDocuments();
     const totalOrders = await Order.countDocuments();
 
+    // Calculate total revenue from paid orders OR delivered orders
+    const revenueResult = await Order.aggregate([
+      { $match: { $or: [{ isPaid: true }, { status: "delivered" }] } },
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+    ]);
+    const totalRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
+
     res.json({
       totalUsers,
       totalArtisans,
       pendingArtisans,
       totalProducts,
-      totalOrders
+      totalOrders,
+      totalRevenue
     });
   } catch (err) {
     res.status(500).json({ message: "Failed to load dashboard summary" });

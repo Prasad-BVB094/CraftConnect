@@ -86,6 +86,28 @@ class APIService {
         : p.category
     }));
   }
+
+  // ==========================================
+  // REVIEWS
+  // ==========================================
+
+  async getReviews(productId) {
+    return this.request(`/reviews/${productId}`);
+  }
+
+  async addReview(productId, rating, comment) {
+    const cleanId = String(productId);
+    return this.request('/reviews', {
+      method: 'POST',
+      body: JSON.stringify({ 
+        productId: cleanId, 
+        product: cleanId, // Backwards compatibility
+        rating: Number(rating), 
+        comment 
+      }),
+    });
+  }
+
   
 
   async getProductById(id) {
@@ -222,6 +244,19 @@ async getAdminDashboard() {
   return this.request('/admin/dashboard');
 }
 
+// Alias for analytics page
+async getAdminDashboardSummary() {
+  const data = await this.request('/admin/dashboard');
+  return {
+    userCount: data.totalUsers,
+    artisanCount: data.totalArtisans,
+    pendingArtisanCount: data.pendingArtisans,
+    productCount: data.totalProducts,
+    orderCount: data.totalOrders,
+    totalRevenue: data.totalRevenue || 0
+  };
+}
+
 // Users
 async getUsers() {
   return this.request('/admin/users');
@@ -317,20 +352,6 @@ async getAdminOrders() {
       });
   }
 
-  // ==========================================
-  // REVIEWS
-  // ==========================================
-
-  async getReviews(productId) {
-    return this.request(`/reviews/${productId}`);
-  }
-
-  async addReview(productId, rating, comment) {
-    return this.request('/reviews', {
-      method: 'POST',
-      body: JSON.stringify({ product: productId, rating, comment })
-    });
-  }
 
   // ==========================================
   // RAZORPAY PAYMENT
@@ -355,10 +376,39 @@ async getAdminOrders() {
   // ==========================================
 
   async submitSupportRequest(data) {
-    // For now, this could be stored locally or sent to backend
-    // Backend endpoint can be added: POST /api/support
-    console.log('Support request submitted:', data);
-    return { success: true, message: 'Support request received' };
+    return this.request('/support', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getSupportQueries(filters = {}) {
+    const params = new URLSearchParams(filters).toString();
+    return this.request(`/support${params ? '?' + params : ''}`);
+  }
+
+  async getPendingSupportCount() {
+    return this.request('/support/pending-count');
+  }
+
+  async replyToSupportQuery(queryId, reply) {
+    return this.request(`/support/${queryId}/reply`, {
+      method: 'POST',
+      body: JSON.stringify({ reply }),
+    });
+  }
+
+  async updateSupportQueryStatus(queryId, status, priority) {
+    return this.request(`/support/${queryId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status, priority }),
+    });
+  }
+
+  async deleteSupportQuery(queryId) {
+    return this.request(`/support/${queryId}`, {
+      method: 'DELETE',
+    });
   }
 }
 

@@ -16,16 +16,30 @@ exports.register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const { generateOTP } = require("../utils/otp");
+    const { sendOTPEmail } = require("../utils/email");
+    const otpData = generateOTP();
+
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
       role: role || "user",
-      isVerified: true,
+      isVerified: false, // Must verify OTP
       isApproved: role === "artisan" ? false : true,
+      otpHash: otpData.hash,
+      otpExpiry: otpData.expiry,
     });
 
-    res.status(201).json({ message: "User registered successfully" });
+    try {
+      console.log(`[AUTH] OTP for ${email}: ${otpData.otp}`);
+      await sendOTPEmail(email, otpData.otp);
+    } catch (emailErr) {
+      console.error("Failed to send OTP email:", emailErr.message);
+      // We still created the user, they can try to login/resend later
+    }
+
+    res.status(201).json({ message: "OTP sent to your email. Please verify to continue." });
   } catch (err) {
     res.status(500).json({ message: "Registration failed" });
   }
@@ -46,6 +60,10 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    if (!user.isVerified) {
+      return res.status(403).json({ message: "Email not verified. Please verify your account." });
     }
 
     if (user.role === "artisan" && !user.isApproved) {
@@ -76,7 +94,34 @@ exports.login = async (req, res) => {
    OTP VERIFY (KEEP AS IS)
 ========================= */
 exports.verifyOtp = async (req, res) => {
-  res.json({ message: "OTP verified (placeholder)" });
+  try {
+    const { email, otp } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ message: "Account already verified" });
+    }
+
+    const { verifyOTP } = require("../utils/otp");
+    const isValid = verifyOTP(otp, user.otpHash);
+
+    if (!isValid || new Date() > user.otpExpiry) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    user.isVerified = true;
+    user.otpHash = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+
+    res.json({ message: "Email verified successfully! You can now login." });
+  } catch (err) {
+    res.status(500).json({ message: "Verification failed" });
+  }
 };
 
 /* =========================

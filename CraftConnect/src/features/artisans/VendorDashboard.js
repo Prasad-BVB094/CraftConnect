@@ -45,7 +45,7 @@ function VendorDashboard() {
       dashboardCard(
         "Manage Products",
         "Edit or remove existing listings.",
-        "📦",
+        React.createElement("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2" }, React.createElement("path", { d: "M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" })),
         () => (window.location.href = "/vendor/products")
       ),
 
@@ -61,7 +61,7 @@ function VendorDashboard() {
       dashboardCard(
         "Edit Profile",
         "Update your artisan details & story.",
-        "👤",
+        React.createElement("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2" }, React.createElement("path", { d: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" }), React.createElement("circle", { cx: "12", cy: "7", r: "4" })),
         () => (window.location.href = "/vendor/profile")
       ),
 
@@ -69,7 +69,7 @@ function VendorDashboard() {
       dashboardCard(
         "Earnings",
         "Check your income from sales.",
-        "💰",
+        React.createElement("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2" }, React.createElement("line", { x1: "12", y1: "1", x2: "12", y2: "23" }), React.createElement("path", { d: "M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" })),
         () => alert("Earnings page coming soon")
       )
     ),

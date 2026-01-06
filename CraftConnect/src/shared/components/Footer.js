@@ -75,7 +75,7 @@ function Footer() {
     React.createElement(
       "div",
       { style: { textAlign: "center", marginTop: "40px", borderTop: "1px solid rgba(166,138,100,0.1)", paddingTop: "20px", color: "var(--muted)", fontSize: "13px" } },
-      "© 2024 CraftConnect. Made with ❤️ for the community."
+      "© 2026 CraftConnect. Handcrafted with tradition."
     )
   );
 }

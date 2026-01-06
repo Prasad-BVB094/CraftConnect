@@ -24,7 +24,15 @@ function CustomerSupportWidget() {
     }
     setIsSubmitting(true);
     try {
-      await apiService.submitSupportRequest(formData);
+      // Format data for backend
+      const submitData = {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject || formData.category,
+        message: formData.message,
+        category: formData.category.toLowerCase().replace(/[^a-z]/g, '') || 'general'
+      };
+      await apiService.submitSupportRequest(submitData);
       setSubmitted(true);
       setTimeout(() => {
         setIsOpen(false);

@@ -157,15 +157,24 @@ function VendorOrdersPage() {
           border: "1px dashed rgba(166,138,100,0.3)"
         }
       },
-        React.createElement("div", { style: { fontSize: "48px", marginBottom: "16px" } }, "📦"),
+        React.createElement("div", { style: { width: "48px", height: "48px", margin: "0 auto 16px", color: "#A68A64" } }, React.createElement("svg", { width: "48", height: "48", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2" }, React.createElement("path", { d: "M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" }))),
         React.createElement("h3", { style: { color: "var(--accent)", marginBottom: "8px" } }, "No orders yet"),
         React.createElement("p", { style: { color: "var(--muted)" } }, "Orders for your products will appear here.")
       ),
 
-      /* Orders List */
+      /* Orders List - 2 per row grid */
       !loading && orders.length > 0 && React.createElement(
         "div",
-        { style: { display: "flex", flexDirection: "column", gap: "16px" } },
+        { 
+          style: { 
+            display: "grid", 
+            gridTemplateColumns: "repeat(2, 1fr)", 
+            gap: "24px",
+            "@media (max-width: 900px)": {
+              gridTemplateColumns: "1fr"
+            }
+          } 
+        },
         orders.map(order =>
           React.createElement("div", {
             key: order._id || order.id,
@@ -342,7 +351,7 @@ function VendorOrdersPage() {
               }
             },
               React.createElement("div", { style: { fontWeight: "600", fontSize: "13px", marginBottom: "4px" } }, 
-                "✨ Customization Request"
+                React.createElement("span", { style: { display: "inline-flex", alignItems: "center", gap: "6px" } }, React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2" }, React.createElement("path", { d: "m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" })), "Customization Request")
               ),
               React.createElement("p", { style: { fontSize: "14px", color: "var(--text)", margin: 0 } }, 
                 order.customizationRequest

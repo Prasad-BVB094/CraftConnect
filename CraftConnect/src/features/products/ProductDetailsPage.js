@@ -117,11 +117,16 @@ function ProductDetailsPage(props) {
       alert('Please write a review comment');
       return;
     }
+    const productId = id; // Always use params id as source of truth
+    if (!productId) {
+      alert('Product ID not found. Please refresh the page.');
+      return;
+    }
     setReviewSubmitting(true);
     try {
-      await apiService.addReview(product.id, newReview.rating, newReview.comment);
+      await apiService.addReview(productId, newReview.rating, newReview.comment);
       // Refresh reviews
-      const reviewsData = await apiService.getReviews(product.id);
+      const reviewsData = await apiService.getReviews(productId);
       setReviews(Array.isArray(reviewsData) ? reviewsData : []);
       setNewReview({ rating: 5, comment: '' });
       alert('Review submitted successfully!');
@@ -242,8 +247,21 @@ function ProductDetailsPage(props) {
 
   const handleAddToCart = async () => {
     if (product) {
-        await addToCart(product, quantity);
-        alert(`Added ${quantity} ${product.name}(s) to cart!`);
+        // Include customization request if set
+        const productWithCustom = customRequest ? { ...product, customizationRequest: customRequest } : product;
+        await addToCart(productWithCustom, quantity);
+        alert(`Added ${quantity} ${product.name}(s) to cart!${customRequest ? '\nWith customization request attached.' : ''}`);
+    }
+  };
+  
+  const handleSaveCustomRequest = () => {
+    if (customRequest.trim()) {
+      // Save to localStorage for checkout inclusion
+      localStorage.setItem('pending_customization', customRequest);
+      alert('Customization request saved! It will be sent with your order.');
+      setShowCustomModal(false);
+    } else {
+      alert('Please enter your customization request.');
     }
   };
 
@@ -621,7 +639,7 @@ function ProductDetailsPage(props) {
                 }
             },
             React.createElement("h3", { style: { fontFamily: "'Playfair Display', serif", marginBottom: "10px", color: "var(--accent)" } }, "Request Customization"),
-            React.createElement("p", { style: { fontSize: "14px", color: "var(--muted)", marginBottom: "20px" } }, `Message to Artisan ${product.artisan} about modifying this item.`),
+            React.createElement("p", { style: { fontSize: "14px", color: "var(--muted)", marginBottom: "20px" } }, `Describe your customization request. It will be sent to ${product.artisan} when you place your order.`),
             React.createElement("textarea", {
                 placeholder: "Describe your request (e.g., specific color, size, inscription)...",
                 value: customRequest,
@@ -636,17 +654,13 @@ function ProductDetailsPage(props) {
                 "div",
                 { style: { display: "flex", gap: "10px", justifyContent: "flex-end" } },
                 React.createElement("button", { 
-                    onClick: () => setShowCustomModal(false),
+                    onClick: () => { setShowCustomModal(false); setCustomRequest(""); },
                     style: { padding: "10px 20px", background: "transparent", border: "none", cursor: "pointer", color: "var(--muted)" }
                 }, "Cancel"),
                 React.createElement("button", { 
-                    onClick: () => {
-                        alert("Request Sent! The artisan will review it and contact you.");
-                        setShowCustomModal(false);
-                        setCustomRequest("");
-                    },
+                    onClick: handleSaveCustomRequest,
                     style: { padding: "10px 24px", background: "var(--accent)", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer" }
-                }, "Send Request")
+                }, "Save Request")
             )
         )
     ),
@@ -829,9 +843,12 @@ function ProductDetailsPage(props) {
 
         /* Review List */
         reviews.length === 0 && React.createElement(
-          "p",
-          { style: { color: "var(--muted)", textAlign: "center", padding: "20px 0" } },
-          "No reviews yet. Be the first to review this product!"
+          "div",
+          { style: { textAlign: "center", padding: "40px 20px" } },
+          React.createElement("span", { style: { fontSize: "48px", marginBottom: "16px", display: "block" } }, "📝"),
+          React.createElement("p", { style: { color: "var(--muted)", fontSize: "16px" } }, 
+            "No reviews yet. Be the first to share your experience!"
+          )
         ),
         reviews.slice(0, 5).map((review, i) =>
           React.createElement(
@@ -839,21 +856,137 @@ function ProductDetailsPage(props) {
             {
               key: i,
               style: {
-                padding: "16px 0",
-                borderBottom: i < reviews.length - 1 ? "1px solid rgba(166,138,100,0.1)" : "none"
+                padding: "20px",
+                marginBottom: "16px",
+                background: "#fff",
+                borderRadius: "14px",
+                border: "1px solid rgba(166,138,100,0.1)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.02)"
               }
             },
-            React.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: "8px" } },
-              React.createElement("span", { style: { fontWeight: "600", color: "var(--secondary)" } }, 
-                review.user?.name || "Anonymous"
+            /* Review Header with Avatar */
+            React.createElement("div", { 
+              style: { 
+                display: "flex", 
+                alignItems: "flex-start", 
+                justifyContent: "space-between",
+                marginBottom: "12px"
+              } 
+            },
+              React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "12px" } },
+                /* Avatar */
+                React.createElement("div", {
+                  style: {
+                    width: "44px",
+                    height: "44px",
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #A68A64, #8B6F47)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#fff",
+                    fontSize: "18px",
+                    fontWeight: "600"
+                  }
+                }, (review.user?.name || "A").charAt(0).toUpperCase()),
+                /* User Info */
+                React.createElement("div", null,
+                  React.createElement("div", { 
+                    style: { fontWeight: "600", color: "#3E2723", fontSize: "15px" } 
+                  }, review.user?.name || "Anonymous"),
+                  React.createElement("div", { 
+                    style: { 
+                      display: "flex", 
+                      alignItems: "center", 
+                      gap: "8px", 
+                      marginTop: "4px" 
+                    } 
+                  },
+                    /* Verified Badge */
+                    React.createElement("span", {
+                      style: {
+                        background: "#E8F5E9",
+                        color: "#2E7D32",
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                        fontSize: "11px",
+                        fontWeight: "500"
+                      }
+                    }, React.createElement("span", { style: { display: "inline-flex", alignItems: "center", gap: "4px" } }, React.createElement("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "3" }, React.createElement("polyline", { points: "20 6 9 17 4 12" })), "Verified Purchase")),
+                    /* Date */
+                    React.createElement("span", { 
+                      style: { fontSize: "12px", color: "#8D6E63" } 
+                    }, new Date(review.createdAt).toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric"
+                    }))
+                  )
+                )
               ),
-              React.createElement("span", { style: { color: "#F4A93C" } }, 
-                "★".repeat(review.rating) + "☆".repeat(5 - review.rating)
+              /* Star Rating */
+              React.createElement("div", { 
+                style: { 
+                  display: "flex", 
+                  alignItems: "center", 
+                  gap: "4px" 
+                } 
+              },
+                [1, 2, 3, 4, 5].map(star =>
+                  React.createElement("span", {
+                    key: star,
+                    style: {
+                      color: star <= review.rating ? "#F4A93C" : "#E0E0E0",
+                      fontSize: "16px"
+                    }
+                  }, React.createElement("svg", { 
+                    width: "16", height: "16", viewBox: "0 0 24 24", 
+                    fill: star <= review.rating ? "#F4A93C" : "none", 
+                    stroke: star <= review.rating ? "#F4A93C" : "#E0E0E0",
+                    strokeWidth: "2"
+                  }, React.createElement("path", { d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" })))
+                )
               )
             ),
-            React.createElement("p", { style: { color: "var(--text)", lineHeight: "1.6" } }, review.comment),
-            React.createElement("span", { style: { fontSize: "12px", color: "var(--muted)" } }, 
-              new Date(review.createdAt).toLocaleDateString()
+            /* Review Comment */
+            React.createElement("p", { 
+              style: { 
+                color: "#5D4037", 
+                lineHeight: "1.7", 
+                margin: 0,
+                fontSize: "14px"
+              } 
+            }, review.comment),
+            /* Helpful Button */
+            React.createElement("div", { 
+              style: { 
+                marginTop: "16px", 
+                paddingTop: "12px", 
+                borderTop: "1px solid rgba(166,138,100,0.08)",
+                display: "flex",
+                gap: "16px"
+              } 
+            },
+              React.createElement("button", {
+                style: {
+                  background: "transparent",
+                  border: "1px solid rgba(166,138,100,0.2)",
+                  padding: "6px 14px",
+                  borderRadius: "6px",
+                  fontSize: "12px",
+                  color: "#8D6E63",
+                  cursor: "pointer"
+                }
+              }, React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", style: { marginRight: "4px" } }, React.createElement("path", { d: "M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" })), " Helpful"),
+              React.createElement("button", {
+                style: {
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "12px",
+                  color: "#A1887F",
+                  cursor: "pointer"
+                }
+              }, "Report")
             )
           )
         ),
@@ -884,7 +1017,12 @@ function ProductDetailsPage(props) {
                   cursor: "pointer",
                   color: star <= newReview.rating ? "#F4A93C" : "#ddd"
                 }
-              }, "★")
+              }, React.createElement("svg", { 
+                width: "24", height: "24", viewBox: "0 0 24 24", 
+                fill: star <= newReview.rating ? "#F4A93C" : "none", 
+                stroke: star <= newReview.rating ? "#F4A93C" : "#ddd",
+                strokeWidth: "2"
+              }, React.createElement("path", { d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" })))
             )
           ),
           /* Comment */

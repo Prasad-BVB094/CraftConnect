@@ -7,16 +7,20 @@ ADD REVIEW (USER)
 ====================================
 */
 exports.addReview = async (req, res) => {
-  const { productId, rating, comment } = req.body;
+  const productId = req.body.productId || req.body.product;
+  const { rating, comment } = req.body;
 
-  if (!productId || !rating) {
-    return res.status(400).json({ message: "Product and rating are required" });
+  if (!productId) {
+    return res.status(400).json({ message: "Product ID is missing (expected productId or product)" });
+  }
+  if (!rating) {
+    return res.status(400).json({ message: "Rating is missing in request" });
   }
 
   try {
     const review = await Review.create({
       product: productId,
-      user: req.user._id,
+      user: req.user.userId || req.user._id,
       rating,
       comment,
     });

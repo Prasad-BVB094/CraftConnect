@@ -37,18 +37,27 @@ exports.placeOrder = async (req, res) => {
     for (const item of cart.items) {
       const product = item.product;
 
-      if (!product || !product.isActive) {
+      // Check if product exists and is active
+      if (!product) {
         return res.status(400).json({ 
-          message: `Product "${product?.title || 'Unknown'}" is no longer available.` 
+          message: `A product in your cart is no longer available.` 
         });
       }
 
+      if (!product.isActive) {
+        return res.status(400).json({ 
+          message: `"${product.title}" has been discontinued and is no longer available.` 
+        });
+      }
+
+      // Check stock availability
       if (product.stock < item.quantity) {
         return res.status(400).json({ 
           message: `Insufficient stock for "${product.title}". Available: ${product.stock}, Requested: ${item.quantity}` 
         });
       }
 
+      // Calculate total
       totalAmount += item.quantity * product.price;
 
       orderItems.push({
@@ -57,6 +66,13 @@ exports.placeOrder = async (req, res) => {
         quantity: item.quantity,
         price: product.price,
       });
+    }
+
+    // Decrement stock for all items AFTER all validations pass
+    for (const item of cart.items) {
+      const product = item.product;
+      product.stock -= item.quantity;
+      await product.save();
     }
 
     const order = await Order.create({

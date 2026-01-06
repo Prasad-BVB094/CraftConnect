@@ -74,7 +74,7 @@ function OrdersPage() {
           border: "1px dashed var(--accent)"
         }
       },
-        React.createElement("div", { style: { fontSize: "40px", marginBottom: "20px" } }, "📦"),
+        React.createElement("div", { style: { width: "40px", height: "40px", margin: "0 auto 20px", color: "var(--accent)" } }, React.createElement("svg", { width: "40", height: "40", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2" }, React.createElement("path", { d: "M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" }))),
         React.createElement("h3", { style: { color: "var(--accent)" } }, "No orders found"),
         React.createElement("p", null, "You haven't placed any orders yet."),
         React.createElement("button", { 

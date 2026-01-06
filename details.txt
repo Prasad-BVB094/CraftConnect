@@ -1,0 +1,217 @@
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTNlYmZkYmE3ODBiMTExZmE1ZTBmMmUiLCJyb2xlIjoidXNlciIsImlhdCI6MTc2Njg2NTYyNCwiZXhwIjoxNzY3NDcwNDI0fQ.7rT_JIY9KuAwrXlcZPOUKbtAW9cu2iTFXgGsW2QvkL4",
+    "user": {
+        "id": "693ebfdba780b111fa5e0f2e",
+        "name": "Test User",
+        "email": "280pu1siddharth@gmail.com",
+        "role": "user"
+    }
+}
+
+
+
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTNlYzY5Mjc4MjYyYjBmYTgxMTBmY2UiLCJyb2xlIjoiYXJ0aXNhbiIsImlhdCI6MTc2Njg2NjI2MSwiZXhwIjoxNzY3NDcxMDYxfQ.qXWSzvE55fL5zhPAh4bXWswuSOuXYuL-ujrOePz23Gc",
+    "user": {
+        "id": "693ec69278262b0fa8110fce",
+        "name": "Test Artisan",
+        "email": "prasadcmorab@gmail.com",
+        "role": "artisan"
+    }
+}
+
+password: "123456"
+
+
+MongoDB connected
+✅ Admin created successfully
+📧 Email: admin@craftconnect.com
+🔑 Password: admin123
+
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTNlYzdkOTdhMmE5NWI0OWEzZDQ2ZTIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NjY4NTg3MjIsImV4cCI6MTc2NzQ2MzUyMn0.u_Euo5IJ1HPRMJbPyZ29hcHPLmm7VcZEC9xFCoxmXPc",
+    "user": {
+        "id": "693ec7d97a2a95b49a3d46e2",
+        "name": "Super Admin",
+        "email": "admin@craftconnect.com",
+        "role": "admin"
+    }
+}
+{
+    "message": "Product created successfully",
+    "product": {
+        "title": "Handmade Vase",
+        "description": "From the potter directly",
+        "price": 500,
+        "images": [
+            "https://res.cloudinary.com/degpuzvnz/image/upload/v1765730155/craftconnect/products/nqaadz6yobubk7iowek5.png"
+        ],
+        "artisan": "693ec69278262b0fa8110fce",
+        "isActive": true,
+        "_id": "693ee76b57e107c01cc03891",
+        "createdAt": "2025-12-14T16:35:56.003Z",
+        "updatedAt": "2025-12-14T16:35:56.003Z",
+        "__v": 0
+    }
+}
+
+
+{
+    "category": {
+        "_id": "693f01cc48b22065d3059b16",
+        "name": "Pottery",
+        "slug": "pottery",
+        "icon": "🪴",
+        "isActive": true,
+        "createdAt": "2025-12-14T18:28:28.233Z",
+        "updatedAt": "2025-12-14T18:28:28.233Z",
+        "__v": 0
+    },
+    "products": []
+}
+
+{
+    "message": "Product updated successfully",
+    "product": {
+        "_id": "693ee76b57e107c01cc03891",
+        "title": "Handmade Vase",
+        "description": "From the potter directly",
+        "price": 500,
+        "images": [
+            "https://res.cloudinary.com/degpuzvnz/image/upload/v1765730155/craftconnect/products/nqaadz6yobubk7iowek5.png"
+        ],
+        "artisan": "693ec69278262b0fa8110fce",
+        "isActive": true,
+        "createdAt": "2025-12-14T16:35:56.003Z",
+        "updatedAt": "2025-12-14T18:43:27.872Z",
+        "__v": 0,
+        "category": "693f01cc48b22065d3059b16"
+    }
+}
+
+{
+    "category": {
+        "_id": "693f01cc48b22065d3059b16",
+        "name": "Pottery",
+        "slug": "pottery",
+        "icon": "🪴",
+        "isActive": true,
+        "createdAt": "2025-12-14T18:28:28.233Z",
+        "updatedAt": "2025-12-14T18:28:28.233Z",
+        "__v": 0
+    },
+    "products": [
+        {
+            "_id": "693ee76b57e107c01cc03891",
+            "title": "Handmade Vase",
+            "description": "From the potter directly",
+            "price": 500,
+            "images": [
+                "https://res.cloudinary.com/degpuzvnz/image/upload/v1765730155/craftconnect/products/nqaadz6yobubk7iowek5.png"
+            ],
+            "artisan": "693ec69278262b0fa8110fce",
+            "isActive": true,
+            "createdAt": "2025-12-14T16:35:56.003Z",
+            "updatedAt": "2025-12-14T18:43:27.872Z",
+            "__v": 0,
+            "category": "693f01cc48b22065d3059b16"
+        }
+    ]
+}
+
+
+{
+    "message": "Product created successfully",
+    "product": {
+        "title": "Vase",
+        "description": "Handmade local vase",
+        "price": 1500,
+        "stock": 0,
+        "images": [
+            "https://res.cloudinary.com/degpuzvnz/image/upload/v1766866492/craftconnect/products/sdueggkszqfzbtns3116.jpg"
+        ],
+        "category": "693f01cc48b22065d3059b16",
+        "artisan": "693ec69278262b0fa8110fce",
+        "isActive": true,
+        "_id": "69503e3d4038fb0e5097af6f",
+        "createdAt": "2025-12-27T20:14:53.815Z",
+        "updatedAt": "2025-12-27T20:14:53.815Z",
+        "__v": 0
+    }
+}
+
+{
+    "message": "Order placed successfully",
+    "order": {
+        "user": "693ebfdba780b111fa5e0f2e",
+        "items": [
+            {
+                "product": "69503e3d4038fb0e5097af6f",
+                "artisan": "693ec69278262b0fa8110fce",
+                "quantity": 1,
+                "price": 1500
+            }
+        ],
+        "shippingAddress": {
+            "address": "Test Address",
+            "city": "Test City",
+            "state": "Test State",
+            "pincode": "123456"
+        },
+        "status": "pending",
+        "totalAmount": 1500,
+        "isPaid": false,
+        "_id": "6951187ced5e8d1dc5f8d3ad",
+        "createdAt": "2025-12-28T11:46:04.935Z",
+        "updatedAt": "2025-12-28T11:46:04.935Z",
+        "__v": 0
+    }
+}
+
+{
+    "name": "Home Decor",
+    "slug": "home-decor",
+    "icon": "🪴",
+    "isActive": true,
+    "_id": "69513a0e2a3c8e3624421889",
+    "createdAt": "2025-12-28T14:09:18.816Z",
+    "updatedAt": "2025-12-28T14:09:18.816Z",
+    "__v": 0
+}
+
+{
+    "message": "Product created successfully",
+    "product": {
+        "title": "Vase",
+        "description": "Handmade vase locally",
+        "price": 900,
+        "stock": 20,
+        "images": [
+            "https://res.cloudinary.com/degpuzvnz/image/upload/v1766931295/craftconnect/products/e2fdvtzcdjjtsbjwja9u.png"
+        ],
+        "category": "69513a0e2a3c8e3624421889",
+        "artisan": "693ec69278262b0fa8110fce",
+        "isActive": true,
+        "_id": "69513b632a3c8e362442188f",
+        "createdAt": "2025-12-28T14:14:59.410Z",
+        "updatedAt": "2025-12-28T14:14:59.410Z",
+        "__v": 0
+    }
+}
+{
+    "_id": "693f01cc48b22065d3059b16",
+    "name": "Pottery",
+    "slug": "pottery",
+    "icon": "🪴",
+    "isActive": true,
+    "createdAt": "2025-12-14T18:28:28.233Z",
+    "updatedAt": "2025-12-30T19:40:01.194Z",
+    "__v": 0,
+    "description": "Handcrafted pottery shaped by artisans using traditional clay techniques and natural firing methods."
+}
+
+src/shared/components/Navbar.js
+src/features/auth/UserLogin.js
+src/features/auth/ArtisanLogin.js

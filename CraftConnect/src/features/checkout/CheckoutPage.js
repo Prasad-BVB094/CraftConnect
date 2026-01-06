@@ -186,7 +186,8 @@ function CheckoutPage() {
         deliveryInstructions: formData.deliveryInstructions,
         paymentMethod: formData.paymentMethod,
         isGift: formData.isGift,
-        giftMessage: formData.giftMessage
+        giftMessage: formData.giftMessage,
+        customizationRequest: localStorage.getItem('pending_customization') || ""
       };
 
       const order = await apiService.createOrder(orderData);
@@ -198,6 +199,7 @@ function CheckoutPage() {
         setOrderId(order._id || order.id || order.order?._id);
         setShowSuccessModal(true);
         clearCart();
+        localStorage.removeItem('pending_customization');
         setTimeout(() => {
           window.location.href = "/orders";
         }, 3500);
@@ -424,7 +426,7 @@ function CheckoutPage() {
           null,
 
           /* Personal Information */
-          createFormSection("Personal Information", "👤",
+          createFormSection("Personal Information", React.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2" }, React.createElement("path", { d: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" }), React.createElement("circle", { cx: "12", cy: "7", r: "4" })),
             createFieldRow(
               createFormField("Full Name", "text", "fullName", formData.fullName, true),
               createFormField("Email Address", "email", "email", formData.email, true)

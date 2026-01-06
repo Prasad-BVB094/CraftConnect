@@ -32,6 +32,8 @@ import ManageArtisansPage from "../../features/admin/ManageArtisansPage";
 import AdminManageProductsPage from "../../features/admin/ManageProducts";
 import ManageOrdersPage from "../../features/admin/ManageOrdersPage";
 import CategoryManagerPage from "../../features/admin/CategoryManagerPage";
+import SupportQueriesPage from "../../features/admin/SupportQueriesPage";
+import AnalyticsPage from "../../features/admin/AnalyticsPage";
 
 
 
@@ -157,6 +159,14 @@ const router = createBrowserRouter([
   {
     path: "/admin/categories",
     element: React.createElement(CategoryManagerPage),
+  },
+  {
+    path: "/admin/support",
+    element: React.createElement(SupportQueriesPage),
+  },
+  {
+    path: "/admin/analytics",
+    element: React.createElement(AnalyticsPage),
   },
   {
     path: "/profile",
