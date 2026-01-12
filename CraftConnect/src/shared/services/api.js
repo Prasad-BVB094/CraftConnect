@@ -3,7 +3,7 @@
 
 class APIService {
   constructor() {
-    this.baseURL = 'http://localhost:3001/api';
+    this.baseURL = 'http://localhost:3001/api' || 'https://craftconnect-tb7e.onrender.com/api';
   }
 
   // Generic request method with Auto-Auth header
