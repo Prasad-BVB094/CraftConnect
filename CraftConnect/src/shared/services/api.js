@@ -1,10 +1,15 @@
 // API Service Layer for Backend Integration
 // Handles all HTTP requests to the backend at http://localhost:3001
 
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL || "http://localhost:3001/api";
+
 class APIService {
   constructor() {
-    this.baseURL = 'http://localhost:3001/api' || 'https://craftconnect-tb7e.onrender.com/api';
+    this.baseURL = API_BASE_URL;
   }
+}
+
 
   // Generic request method with Auto-Auth header
   async request(endpoint, options = {}) {
